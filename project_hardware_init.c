@@ -21,6 +21,37 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "main.h"
+#include "serial_debug.h"
+#include "ft6x06.h"
 
 
+/*
+  Initializes lcd screen to the beginning of the game???
+*/
+void init_screen(void)
+{
+  lcd_config_gpio();
+  lcd_config_screen();
+  lcd_clear_screen(LCD_COLOR_BLACK);   
+}
 
+void init_hardware(void)
+{
+	//Initializing launchpad
+	//  init_serial_debug();	
+	lp_io_init();
+	
+	//joystick initialize
+	ps2_initialize();
+	
+	//Spacebar "pause" function initialization
+	uart_init(UART0_BASE, true, true);
+	
+	//Capacitive touch controller
+	ft6x06_init();
+	
+	//I2C I/O Expander
+	
+	//LCD screen
+	init_screen();
+}

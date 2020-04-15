@@ -23,7 +23,14 @@
 #define __HARDWARE_INIT_H__
 
 #include "main.h"
+#include "serial_debug.h"
+#include "ft6x06.h"
 
+//only initializes lcd screen
+void init_screen(void);
+
+//Main hardware
+void init_hardware(void);
 
 
 #endif
