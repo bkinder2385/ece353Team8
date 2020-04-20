@@ -112,10 +112,16 @@ bool check_if_hit(
 
 //*****************************************************************************
 // Game Setup. Initializes lcd and capacitive touch. Shows START button and 
-// game title (TBD) and trex_standing??
+// game title (TBD) and trex_standing?? if START is touched, it returns true.
+// Returns false otherwise.
 //*****************************************************************************
-void game_menu(void){
+bool game_menu(void){
 	init_screen();
+	//Prints game menu screen
+	
+	//Checks if touch happened
+	
+	return false;
 }
 
 //*****************************************************************************
@@ -124,13 +130,21 @@ void game_menu(void){
 int 
 main(void)
 {
+		bool game_start = false;
 		bool game_over = false;
 	  bool hit = false;
 	  bool crouching = false;
 		int health_bar = 8;
-	
+		
+		//start game
+		while(!game_start){
+			game_start = game_menu();
+		}
+		
+		//play game
     while(!game_over){
-						
+			//SPACEBAR/PAUSE FUNCTIONALITY
+				
 			//CACTUS
 			if(ALERT_CACTUS){
 				ALERT_CACTUS = false;
@@ -202,5 +216,51 @@ main(void)
 				}
 			}
 			
+			//TREX
+			if(ALERT_TREX){
+				ALERT_TREX = false;
+				
+				if(crouching){
+					lcd_draw_image(
+                          TREX_X_COORD,                       // X Center Point
+                          trex_crouchingWidthPixels,   // Image Horizontal Width
+                          TREX_Y_COORD,                       // Y Center Point
+                          trex_crouchingHeightPixels,  // Image Vertical Height
+                          trex_crouchingBitmaps,       // Image
+                          LCD_COLOR_ORANGE,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+				}else {
+					lcd_draw_image(
+                          TREX_X_COORD,                       // X Center Point
+                          trex_standingWidthPixels,   // Image Horizontal Width
+                          TREX_Y_COORD,                       // Y Center Point
+                          trex_standingHeightPixels,  // Image Vertical Height
+                          trex_standingBitmaps,       // Image
+                          LCD_COLOR_ORANGE,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+				}
+				
+				//check if hit
+				if(crouching){
+					hit = check_if_hit();//needs image info
+				}else {
+					hit = check_if_hit();//needs image info
+				}
+			
+				if(hit){
+					//decrease led (health bar)
+					health_bar--;
+					//decrease leds
+				
+					//check if game over (all leds off)
+					if(health_bar == 0){
+						//show game over
+						game_over = true;
+						continue;
+					}
+				}
+			}
 		};
 }
