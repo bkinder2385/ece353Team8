@@ -130,24 +130,77 @@ main(void)
 		int health_bar = 8;
 	
     while(!game_over){
-			//check if hit
-			if(crouching){
-				hit = check_if_hit();//needs image info
-			}else {
-				hit = check_if_hit();//needs image info
-			}
-			
-			if(hit){
-				//decrease led (health bar)
-				health_bar--;
-				//decrease leds
+						
+			//CACTUS
+			if(ALERT_CACTUS){
+				ALERT_CACTUS = false;
 				
-				//check if game over (all leds off)
-				if(health_bar == 0){
-					//show game over
+				//DRAW CACTUS
+				lcd_draw_image(
+                          CACTUS_X_COORD,                       // X Center Point
+                          cactusWidthPixels,   // Image Horizontal Width
+                          CACTUS_Y_COORD,                       // Y Center Point
+                          cactusHeightPixels,  // Image Vertical Height
+                          cactusBitmaps,       // Image
+                          LCD_COLOR_GREEN,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+				//check if hit
+				if(crouching){
+					hit = check_if_hit();//needs image info
+				}else {
+					hit = check_if_hit();//needs image info
+				}
+			
+				if(hit){
+					//decrease led (health bar)
+					health_bar--;
+					//decrease leds
+				
+					//check if game over (all leds off)
+					if(health_bar == 0){
+						//show game over
+						game_over = true;
+						continue;
+					}
 				}
 			}
 			
-			if()
+			//PTERODACTYL
+			if(ALERT_PTER){
+				ALERT_PTER = false;
+				
+				//DRAW PTERODACTYL
+				lcd_draw_image(
+                          PTERODACTYL_X_COORD,                       // X Center Point
+                          pterodactylWidthPixels,   // Image Horizontal Width
+                          PTERODACTYL_Y_COORD,                       // Y Center Point
+                          pterodactylHeightPixels,  // Image Vertical Height
+                          pterodactylBitmaps,       // Image
+                          LCD_COLOR_RED,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+				
+				//check if hit
+				if(crouching){
+					hit = check_if_hit();//needs image info
+				}else {
+					hit = check_if_hit();//needs image info
+				}
+			
+				if(hit){
+					//decrease led (health bar)
+					health_bar--;
+					//decrease leds
+				
+					//check if game over (all leds off)
+					if(health_bar == 0){
+						//show game over
+						game_over = true;
+						continue;
+					}
+				}
+			}
+			
 		};
 }
