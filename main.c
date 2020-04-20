@@ -22,6 +22,17 @@
 
 #include "main.h"
 
+volatile uint16_t PTERODACTYL_X_COORD;
+volatile uint16_t PTERODACTYL_Y_COORD;
+volatile uint16_t TREX_X_COORD = 0;
+volatile uint16_t TREX_Y_COORD = 0;
+volatile uint16_t CACTUS_X_COORD;
+volatile uint16_t CACTUS_Y_COORD;
+
+//alerts for image rendering
+volatile bool ALERT_TREX = true;
+volatile bool ALERT_PTER = true;
+volatile bool ALERT_CACTUS = true;
 
 //*****************************************************************************
 //*****************************************************************************
@@ -41,12 +52,102 @@ void EnableInterrupts(void)
   }
 }
 
+//*****************************************************************************
+// Determines is any portion of the two images are overlapping.  An image is
+// considered to be overlapping if the two rectangles determined by the image
+// height and widths are overlapping.  An overlap occurs even if the area that
+// overlaps are portions of the images where the pixels do not display on the
+// screen.
+//*****************************************************************************
+bool check_if_hit(
+        volatile uint16_t trex_x_coord, 
+        volatile uint16_t trex_y_coord, 
+        uint8_t trex_height, 
+        uint8_t trex_width,
+        volatile uint16_t cactus_x_coord, 
+        volatile uint16_t cactus_y_coord, 
+        uint8_t cactus_height, 
+        uint8_t cactus_width,
+				volatile uint16_t pterodactyl_x_coord, 
+        volatile uint16_t pterodactyl_y_coord, 
+        uint8_t pterodactyl_height, 
+        uint8_t pterodactyl_width
+)
+{
+	bool overlap = false;
+	
+	//Cactus hit		
+	if ( ( ( (cactus_y_coord + (cactus_height/2)) < (trex_y_coord + (trex_height/2)) ) & 
+			( (cactus_y_coord + (cactus_height/2)) > (trex_y_coord - (trex_height/2)) ) ) |
+			( ( (cactus_y_coord - (cactus_height/2)) < (trex_y_coord + (trex_height/2)) ) & 
+			( (cactus_y_coord - (cactus_height/2)) > (trex_y_coord - (trex_height/2)) ) )){
+				if ((( (cactus_x_coord + (cactus_width/2)) < (trex_x_coord + (trex_width/2)) ) & 
+						( (cactus_x_coord + (cactus_width/2)) > (trex_x_coord - (trex_width/2)))) |
+						(( (cactus_x_coord - (cactus_width/2)) < (trex_x_coord + (trex_width/2))) & 
+						( (cactus_x_coord - (cactus_width/2)) > (trex_x_coord - (trex_width/2))))){
+							
+							overlap = true;
+							return overlap;
+				}
+	}
+			
+	//Pterodactyl hit
+	if ( ( ( (pterodactyl_y_coord + (pterodactyl_height/2)) < (trex_y_coord + (trex_height/2)) ) & 
+			( (pterodactyl_y_coord + (pterodactyl_height/2)) > (trex_y_coord - (trex_height/2)) ) ) |
+			( ( (pterodactyl_y_coord - (pterodactyl_height/2)) < (trex_y_coord + (trex_height/2)) ) & 
+			( (pterodactyl_y_coord - (pterodactyl_height/2)) > (trex_y_coord - (trex_height/2)) ) ) ){
+				if ((( (pterodactyl_x_coord + (pterodactyl_width/2)) < (trex_x_coord + (trex_width/2)) ) & 
+						( (pterodactyl_x_coord + (pterodactyl_width/2)) > (trex_x_coord - (trex_width/2))) ) |
+						(( (pterodactyl_x_coord - (pterodactyl_width/2)) < (trex_x_coord + (trex_width/2))) & 
+						( (pterodactyl_x_coord - (pterodactyl_width/2)) > (trex_x_coord - (trex_width/2))))){
+							
+							overlap = true;
+							return overlap;
+				}
+	}
+	return overlap;
+  
+}
+
 
 //*****************************************************************************
+// Game Setup. Initializes lcd and capacitive touch. Shows START button and 
+// game title (TBD) and trex_standing??
+//*****************************************************************************
+void game_menu(void){
+	init_screen();
+}
+
+//*****************************************************************************
+// Main play of game.
 //*****************************************************************************
 int 
 main(void)
 {
-
-    while(1){};
+		bool game_over = false;
+	  bool hit = false;
+	  bool crouching = false;
+		int health_bar = 8;
+	
+    while(!game_over){
+			//check if hit
+			if(crouching){
+				hit = check_if_hit();//needs image info
+			}else {
+				hit = check_if_hit();//needs image info
+			}
+			
+			if(hit){
+				//decrease led (health bar)
+				health_bar--;
+				//decrease leds
+				
+				//check if game over (all leds off)
+				if(health_bar == 0){
+					//show game over
+				}
+			}
+			
+			if()
+		};
 }
