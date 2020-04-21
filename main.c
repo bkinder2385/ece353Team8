@@ -158,11 +158,13 @@ void update_health_bar(int health_bar){
 // Returns false otherwise.
 //*****************************************************************************
 bool game_menu(void){
-	init_screen();
-	//Prints game menu screen
-	
+
 	//Checks if touch happened
-	
+	if(ft6x06_read_td_status() > 0){
+		//check x and y to see if on start?
+		//for now, any touch starts game
+		return true;
+	}
 	return false;
 }
 
@@ -178,14 +180,21 @@ main(void)
 	  bool crouching = false;
 		int health_bar = 8;
 		
+		init_screen();
+		init_hardware();	
+		//Prints game menu screen
+	
 		//start game
-		while(!game_start){
+		while(!game_start){			
+			//Checks if player starts game
 			game_start = game_menu();
 		}
 		
+		lcd_clear_screen(LCD_COLOR_BLACK);
+		
 		//play game
     while(!game_over){
-			//SPACEBAR/PAUSE FUNCTIONALITY
+			//SPACEBAR/PAUSE FUNCTIONALITY: needs to be done
 				
 			//CACTUS
 			if(ALERT_CACTUS){
