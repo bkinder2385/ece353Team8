@@ -1,5 +1,5 @@
 // Bitmap info for cactus1
-extern const uint8_t cactus1Bitmaps;
-extern const uint8_t cactus1WidthPixels;
-extern const uint8_t cactus1HeightPixels;
+extern const uint8_t cactusBitmaps;
+extern const uint8_t cactusWidthPixels;
+extern const uint8_t cactusHeightPixels;
 

@@ -21,6 +21,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "main.h"
+#include "io_expander.h"
+#include "project_images.h"
 
 volatile uint16_t PTERODACTYL_X_COORD;
 volatile uint16_t PTERODACTYL_Y_COORD;
@@ -109,6 +111,46 @@ bool check_if_hit(
   
 }
 
+//*****************************************************************************
+// Updates the health bar. When hit, decrease the number of leds by two.
+//*****************************************************************************
+void update_health_bar(int health_bar){
+	
+	io_expander_byte_write(I2C1_BASE, 0x00, 0x00);	// ENABLE AS OUTPUTS
+	io_expander_byte_write(I2C1_BASE, 0x01, 0xFF);
+	io_expander_byte_write(I2C1_BASE, 0x02, 0x00);	// SAME POLARITY FOR GPIO
+	io_expander_byte_write(I2C1_BASE, 0x03, 0x00);
+	io_expander_byte_write(I2C1_BASE, 0x0E, 0xFF); 	// Enable INTERRUPT ON FLAG
+	io_expander_byte_write(I2C1_BASE, 0x10, 0xFF); 	// Enable INTERRUPT ON PIN
+	
+	if(health_bar == 8){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0xFF);	// ENABLE GPIO
+	}
+	if(health_bar == 7){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0x7F);	// ENABLE GPIO
+	}
+	if(health_bar == 6){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0x3F);	// ENABLE GPIO
+	}
+	if(health_bar == 5){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0x1F);	// ENABLE GPIO
+	}
+	if(health_bar == 4){
+			io_expander_byte_write(I2C1_BASE, 0x12, 0x0F);	// ENABLE GPIO
+	}
+	if(health_bar == 3){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0x07);	// ENABLE GPIO
+	}
+	if(health_bar == 2){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0x03);	// ENABLE GPIO
+	}
+	if(health_bar == 1){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0x01);	// ENABLE GPIO
+	}
+	if(health_bar == 0){
+		io_expander_byte_write(I2C1_BASE, 0x12, 0x00);	// ENABLE GPIO
+	}
+}
 
 //*****************************************************************************
 // Game Setup. Initializes lcd and capacitive touch. Shows START button and 
@@ -155,21 +197,26 @@ main(void)
                           cactusWidthPixels,   // Image Horizontal Width
                           CACTUS_Y_COORD,                       // Y Center Point
                           cactusHeightPixels,  // Image Vertical Height
-                          cactusBitmaps,       // Image
+                          &cactusBitmaps,       // Image
                           LCD_COLOR_GREEN,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
 				//check if hit
 				if(crouching){
-					hit = check_if_hit();//needs image info
+					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
 				}else {
-					hit = check_if_hit();//needs image info
+					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
 				}
 			
 				if(hit){
 					//decrease led (health bar)
 					health_bar--;
 					//decrease leds
+					update_health_bar(health_bar);
 				
 					//check if game over (all leds off)
 					if(health_bar == 0){
@@ -190,22 +237,27 @@ main(void)
                           pterodactylWidthPixels,   // Image Horizontal Width
                           PTERODACTYL_Y_COORD,                       // Y Center Point
                           pterodactylHeightPixels,  // Image Vertical Height
-                          pterodactylBitmaps,       // Image
+                          &pterodactylBitmaps,       // Image
                           LCD_COLOR_RED,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
 				
 				//check if hit
 				if(crouching){
-					hit = check_if_hit();//needs image info
+					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
 				}else {
-					hit = check_if_hit();//needs image info
+					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
 				}
 			
 				if(hit){
 					//decrease led (health bar)
 					health_bar--;
 					//decrease leds
+					update_health_bar(health_bar);
 				
 					//check if game over (all leds off)
 					if(health_bar == 0){
@@ -223,20 +275,20 @@ main(void)
 				if(crouching){
 					lcd_draw_image(
                           TREX_X_COORD,                       // X Center Point
-                          trex_crouchingWidthPixels,   // Image Horizontal Width
+                          trexcrouchingWidthPixels,   // Image Horizontal Width
                           TREX_Y_COORD,                       // Y Center Point
-                          trex_crouchingHeightPixels,  // Image Vertical Height
-                          trex_crouchingBitmaps,       // Image
+                          trexcrouchingHeightPixels,  // Image Vertical Height
+                          &trexcrouchingBitmaps,       // Image
                           LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
 				}else {
 					lcd_draw_image(
                           TREX_X_COORD,                       // X Center Point
-                          trex_standingWidthPixels,   // Image Horizontal Width
+                          trexstandingWidthPixels,   // Image Horizontal Width
                           TREX_Y_COORD,                       // Y Center Point
-                          trex_standingHeightPixels,  // Image Vertical Height
-                          trex_standingBitmaps,       // Image
+                          trexstandingHeightPixels,  // Image Vertical Height
+                          &trexstandingBitmaps,       // Image
                           LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
@@ -244,15 +296,20 @@ main(void)
 				
 				//check if hit
 				if(crouching){
-					hit = check_if_hit();//needs image info
+					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
 				}else {
-					hit = check_if_hit();//needs image info
+					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
 				}
 			
 				if(hit){
 					//decrease led (health bar)
 					health_bar--;
 					//decrease leds
+					update_health_bar(health_bar);
 				
 					//check if game over (all leds off)
 					if(health_bar == 0){
