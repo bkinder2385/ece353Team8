@@ -24,7 +24,42 @@
 #include "project_interrupts.h"
 
 
+volatile uint16_t PS2_X_DATA = 0;
+volatile uint16_t PS2_Y_DATA = 0;
+volatile PS2_DIR_t PS2_DIR = PS2_DIR_CENTER;
 
+//*****************************************************************************
+// Returns the most current direction that was pressed.
+//*****************************************************************************
+PS2_DIR_t ps2_get_direction(void)
+{
 
+	if (PS2_X_DATA > (0xC00)) {  
+			return PS2_DIR_LEFT;
+	}else if (PS2_X_DATA < 0x3FF) {
+			return PS2_DIR_RIGHT;
+	}else if (PS2_Y_DATA > 0xC00) {
+			return PS2_DIR_DOWN;
+	}else if (PS2_Y_DATA < 0x3FF) {
+			return PS2_DIR_UP;
+	}
+	return PS2_DIR_CENTER;
+}
+
+//*****************************************************************************
+// TIMER2 ISR is used to determine when to move the TREX and CACTUS
+//*****************************************************************************
+void TIMER2A_Handler(void)
+{	
+	PS2_DIR_t direction = PS2_DIR;
+//	bool contact = contact_edge( direction, INVADER_X_COORD,  INVADER_Y_COORD, invaderHeightPixels, invaderWidthPixels);
+	
+//	if (!contact) {
+//		move_image(direction, &INVADER_X_COORD, &INVADER_Y_COORD, invaderHeightPixels, invaderWidthPixels);
+//		ALERT_INVADER = true;
+//	}
+    // Clear the interrupt
+	TIMER2->ICR |= TIMER_ICR_TATOCINT;
+}
 
 
