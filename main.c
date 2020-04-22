@@ -24,6 +24,7 @@
 #include "io_expander.h"
 #include "project_images.h"
 
+//image locations
 volatile uint16_t PTERODACTYL_X_COORD = 240;
 volatile uint16_t PTERODACTYL_Y_COORD = 240;
 volatile uint16_t TREX_X_COORD = 33;
@@ -35,6 +36,9 @@ volatile uint16_t CACTUS_Y_COORD = 240;
 volatile bool ALERT_TREX = true;
 volatile bool ALERT_PTER = false;
 volatile bool ALERT_CACTUS = false;
+
+//pause status
+volatile bool PAUSED = false;
 
 //*****************************************************************************
 //*****************************************************************************
@@ -180,6 +184,16 @@ bool game_menu(void){
                           LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
+												
+	lcd_draw_image(
+                          120,                       // X Center Point
+                          game_titleWidthPixels,   // Image Horizontal Width
+                          75,                       // Y Center Point
+                          game_titleHeightPixels,  // Image Vertical Height
+                          game_titleBitmaps,       // Image
+                          LCD_COLOR_RED,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
 	
 	//Checks if touch happened
 	if(ft6x06_read_td_status() > 0){
@@ -246,9 +260,18 @@ main(void)
 		
 		//play game
     while(!game_over){
+			
 			hit = false;
+			
 			//SPACEBAR/PAUSE FUNCTIONALITY: needs to be done
+			while(PAUSED){
+				ALERT_CACTUS = false;
+				ALERT_PTER = false;
+				ALERT_TREX = false;
+				//print PAUSED in upper right corner
 				
+			}	
+			
 			//CACTUS
 			if(ALERT_CACTUS){
 				ALERT_CACTUS = false;

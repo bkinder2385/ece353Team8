@@ -6,6 +6,11 @@
 
 #include <stdint.h>
 
+/* Bitmap info for game_title */
+extern const uint8_t game_titleBitmaps [];
+extern const uint8_t game_titleWidthPixels;
+extern const uint8_t game_titleHeightPixels;
+
 // Bitmap info for trexstanding
 extern const uint8_t trexstandingBitmaps[];
 extern const uint8_t trexstandingWidthPixels;
