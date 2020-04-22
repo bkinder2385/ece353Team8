@@ -21,6 +21,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "main.h"
+#include "io_expander.h"
 
 volatile uint16_t PTERODACTYL_X_COORD;
 volatile uint16_t PTERODACTYL_Y_COORD;
@@ -33,6 +34,8 @@ volatile uint16_t CACTUS_Y_COORD;
 volatile bool ALERT_TREX = true;
 volatile bool ALERT_PTER = true;
 volatile bool ALERT_CACTUS = true;
+volatile bool jump = false;
+volatile bool duck = false;
 
 //*****************************************************************************
 //*****************************************************************************
@@ -151,6 +154,27 @@ void update_health_bar(int health_bar){
 }
 
 
+void read_buttons(void){
+	
+	uint8_t read_val;
+	uint8_t read_up;
+	uint8_t read_down;
+	
+	io_expander_byte_write(I2C1_BASE, 0x01, 0x03);	// ENABLE GPIOB as inpput put this elsewhere
+	
+	io_expander_byte_read(I2C1_BASE, 0x13, &read_val); // put data at GPIOB in 
+	
+	read_val = read_val & 0x03;
+	read_up = read_val & 0x01;
+	read_down = read_val & 0x02;
+	if (read_up == 0x01) {
+		jump = true;
+	}
+	if (read_down == 0x02){
+		duck = true;
+	}
+		
+}
 //*****************************************************************************
 // Game Setup. Initializes lcd and capacitive touch. Shows START button and 
 // game title (TBD) and trex_standing??
