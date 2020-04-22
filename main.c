@@ -26,8 +26,8 @@
 
 volatile uint16_t PTERODACTYL_X_COORD = 240;
 volatile uint16_t PTERODACTYL_Y_COORD = 240;
-volatile uint16_t TREX_X_COORD = 0;
-volatile uint16_t TREX_Y_COORD = 0;
+volatile uint16_t TREX_X_COORD = 33;
+volatile uint16_t TREX_Y_COORD = 204;
 volatile uint16_t CACTUS_X_COORD = 240;
 volatile uint16_t CACTUS_Y_COORD = 240;
 
@@ -162,13 +162,22 @@ bool game_menu(void){
 	uint16_t x_value;
 	uint16_t y_value;
 	//Prints game menu screen
-			lcd_draw_image(
+	lcd_draw_image(
                           120,                       // X Center Point
                           start_btnWidthPixels,   // Image Horizontal Width
                           220,                       // Y Center Point
                           start_btnHeightPixels,  // Image Vertical Height
                           start_btnBitmaps,       // Image
                           LCD_COLOR_BROWN,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+	lcd_draw_image(
+                          120,                       // X Center Point
+                          trexstandingWidthPixels,   // Image Horizontal Width
+                          130,                       // Y Center Point
+                          trexstandingHeightPixels,  // Image Vertical Height
+                          trexstandingBitmaps,       // Image
+                          LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
 	
@@ -214,6 +223,25 @@ main(void)
 		}
 		
 		lcd_clear_screen(LCD_COLOR_BLACK);
+		lcd_draw_image(
+                          (groundWidthPixels/2),                       // X Center Point
+                          groundWidthPixels,   // Image Horizontal Width
+                          (319 - (groundHeightPixels/2)),                       // Y Center Point
+                          groundHeightPixels,  // Image Vertical Height
+                          groundBitmaps,       // Image
+                          LCD_COLOR_BROWN,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+		lcd_draw_image(
+                          TREX_X_COORD,                       // X Center Point
+                          trexstandingWidthPixels,   // Image Horizontal Width
+                          TREX_Y_COORD,                       // Y Center Point
+                          trexstandingHeightPixels,  // Image Vertical Height
+                          trexstandingBitmaps,       // Image
+                          LCD_COLOR_ORANGE,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+		
 		update_health_bar(health_bar);
 		
 		//play game
@@ -235,6 +263,7 @@ main(void)
                           LCD_COLOR_GREEN,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
+				
 				//check if hit
 				if(crouching){
 					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,

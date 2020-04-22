@@ -31,4 +31,9 @@ extern const uint8_t start_btnBitmaps[];
 extern const uint8_t start_btnWidthPixels;
 extern const uint8_t start_btnHeightPixels;
 
+/* Bitmap info for ground */
+extern const uint8_t groundBitmaps[];
+extern const uint8_t groundWidthPixels;
+extern const uint8_t groundHeightPixels;
+
 #endif
