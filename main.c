@@ -24,17 +24,17 @@
 #include "io_expander.h"
 #include "project_images.h"
 
-volatile uint16_t PTERODACTYL_X_COORD;
-volatile uint16_t PTERODACTYL_Y_COORD;
+volatile uint16_t PTERODACTYL_X_COORD = 240;
+volatile uint16_t PTERODACTYL_Y_COORD = 240;
 volatile uint16_t TREX_X_COORD = 0;
 volatile uint16_t TREX_Y_COORD = 0;
-volatile uint16_t CACTUS_X_COORD;
-volatile uint16_t CACTUS_Y_COORD;
+volatile uint16_t CACTUS_X_COORD = 240;
+volatile uint16_t CACTUS_Y_COORD = 240;
 
 //alerts for image rendering
 volatile bool ALERT_TREX = true;
-volatile bool ALERT_PTER = true;
-volatile bool ALERT_CACTUS = true;
+volatile bool ALERT_PTER = false;
+volatile bool ALERT_CACTUS = false;
 
 //*****************************************************************************
 //*****************************************************************************
@@ -158,13 +158,33 @@ void update_health_bar(int health_bar){
 // Returns false otherwise.
 //*****************************************************************************
 bool game_menu(void){
-
+	
+	uint16_t x_value;
+	uint16_t y_value;
+	//Prints game menu screen
+			lcd_draw_image(
+                          120,                       // X Center Point
+                          start_btnWidthPixels,   // Image Horizontal Width
+                          220,                       // Y Center Point
+                          start_btnHeightPixels,  // Image Vertical Height
+                          start_btnBitmaps,       // Image
+                          LCD_COLOR_BROWN,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+	
 	//Checks if touch happened
 	if(ft6x06_read_td_status() > 0){
-		//check x and y to see if on start?
-		//for now, any touch starts game
-		return true;
+		//check x and y to see if on start
+		x_value = ft6x06_read_x();
+		if((x_value >= (120 - (start_btnWidthPixels/2))) & (x_value <= (120 + (start_btnWidthPixels/2)))){
+			y_value = ft6x06_read_y();
+			if((y_value >= (220 - (start_btnHeightPixels/2))) & (y_value <= (220 + (start_btnHeightPixels/2)))){
+				return true;
+			}
+		}
+		
 	}
+	
 	return false;
 }
 
@@ -180,20 +200,25 @@ main(void)
 	  bool crouching = false;
 		int health_bar = 8;
 		
-		init_screen();
+		//init_screen();
 		init_hardware();	
-		//Prints game menu screen
 	
+		
+
 		//start game
 		while(!game_start){			
 			//Checks if player starts game
 			game_start = game_menu();
+			
+			
 		}
 		
 		lcd_clear_screen(LCD_COLOR_BLACK);
+		update_health_bar(health_bar);
 		
 		//play game
     while(!game_over){
+			hit = false;
 			//SPACEBAR/PAUSE FUNCTIONALITY: needs to be done
 				
 			//CACTUS
@@ -206,7 +231,7 @@ main(void)
                           cactusWidthPixels,   // Image Horizontal Width
                           CACTUS_Y_COORD,                       // Y Center Point
                           cactusHeightPixels,  // Image Vertical Height
-                          &cactusBitmaps,       // Image
+                          cactusBitmaps,       // Image
                           LCD_COLOR_GREEN,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
@@ -246,7 +271,7 @@ main(void)
                           pterodactylWidthPixels,   // Image Horizontal Width
                           PTERODACTYL_Y_COORD,                       // Y Center Point
                           pterodactylHeightPixels,  // Image Vertical Height
-                          &pterodactylBitmaps,       // Image
+                          pterodactylBitmaps,       // Image
                           LCD_COLOR_RED,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
@@ -287,7 +312,7 @@ main(void)
                           trexcrouchingWidthPixels,   // Image Horizontal Width
                           TREX_Y_COORD,                       // Y Center Point
                           trexcrouchingHeightPixels,  // Image Vertical Height
-                          &trexcrouchingBitmaps,       // Image
+                          trexcrouchingBitmaps,       // Image
                           LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
@@ -297,7 +322,7 @@ main(void)
                           trexstandingWidthPixels,   // Image Horizontal Width
                           TREX_Y_COORD,                       // Y Center Point
                           trexstandingHeightPixels,  // Image Vertical Height
-                          &trexstandingBitmaps,       // Image
+                          trexstandingBitmaps,       // Image
                           LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );

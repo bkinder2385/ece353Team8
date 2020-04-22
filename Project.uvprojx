@@ -412,6 +412,26 @@
               <FileType>5</FileType>
               <FilePath>.\project_interrupts.h</FilePath>
             </File>
+            <File>
+              <FileName>project_images.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\project_images.c</FilePath>
+            </File>
+            <File>
+              <FileName>project_images.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\project_images.h</FilePath>
+            </File>
+            <File>
+              <FileName>io_expander.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\io_expander.h</FilePath>
+            </File>
+            <File>
+              <FileName>io_expander.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\io_expander.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

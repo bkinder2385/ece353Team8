@@ -23,6 +23,7 @@
 #include "main.h"
 #include "serial_debug.h"
 #include "ft6x06.h"
+#include "project_hardware_init.h"
 
 
 /*
@@ -32,7 +33,7 @@ void init_screen(void)
 {
   lcd_config_gpio();
   lcd_config_screen();
-  lcd_clear_screen(LCD_COLOR_BLACK);   
+  lcd_clear_screen(LCD_COLOR_BLACK);
 }
 
 void init_hardware(void)
@@ -51,6 +52,7 @@ void init_hardware(void)
 	ft6x06_init();
 	
 	//I2C I/O Expander
+	//io_expander_init();
 	
 	//LCD screen
 	init_screen();
