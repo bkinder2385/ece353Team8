@@ -67,7 +67,7 @@ extern volatile bool CROUCH;
 
 
 //pause status
-volatile bool PAUSED = false;
+extern volatile bool PAUSED;
 
 //*****************************************************************************
 // Moves the image by one pixel in the provided direction.  The second and 

@@ -36,13 +36,13 @@
 
 extern volatile uint16_t PS2_X_DATA;
 extern volatile uint16_t PS2_Y_DATA;
-extern volatile PS2_DIR_t PS2_DIR;
+//extern volatile PS2_DIR_t PS2_DIR;
 extern volatile bool BUTTON_PRESS;
 
 //*****************************************************************************
 // Returns the most current direction that was pressed.
 //*****************************************************************************
-PS2_DIR_t ps2_get_direction(void);
+//PS2_DIR_t ps2_get_direction(void);
 
 //*****************************************************************************
 // TIMER2 ISR is used to determine when to move the TREX and CACTUS

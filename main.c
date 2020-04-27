@@ -27,10 +27,10 @@
 //image locations
 volatile uint16_t PTERODACTYL_X_COORD = 240;
 volatile uint16_t PTERODACTYL_Y_COORD = 240;
-volatile uint16_t TREX_X_COORD = 33;
+volatile uint16_t TREX_X_COORD = 34;
 volatile uint16_t TREX_Y_COORD = 204;
-volatile uint16_t CACTUS_X_COORD = 240;
-volatile uint16_t CACTUS_Y_COORD = 240;
+volatile uint16_t CACTUS_X_COORD = 219;
+volatile uint16_t CACTUS_Y_COORD = 207;
 
 //alerts for image rendering
 volatile bool ALERT_TREX = true;
@@ -38,10 +38,11 @@ volatile bool ALERT_PTER = false;
 volatile bool ALERT_CACTUS = false;
 
 //Action Determination
+volatile bool BUTTON_PRESS = false;
 volatile bool JUMP = false;
 volatile bool CROUCH = false;
-
-
+int PRESSED_EVEN;
+int DEBOUNCE_INCREMENT;
 
 //pause status
 volatile bool PAUSED = false;
@@ -76,7 +77,7 @@ bool contact_edge(
     uint8_t image_width
 )
 {
-	//bool return_value;
+	bool hit;
 	switch(direction) {
 		case PS2_DIR_LEFT:
 		{
@@ -91,9 +92,12 @@ bool contact_edge(
 			}
 		}
 		default:{
-			return false;
 		}
 	}
+	hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
+	return hit;
 }
 
 //*****************************************************************************
@@ -233,31 +237,60 @@ void update_health_bar(int health_bar){
 	}
 }
 
+// debounces the button
+bool debounce(void){
+
+	uint8_t read_val;
+	io_expander_byte_read(I2C1_BASE, MCP23017_INTFB_R, &read_val);
+	printf("%x\n", read_val);
+	if(read_val == 0) {
+		DEBOUNCE_INCREMENT++;
+	}
+	else {
+		DEBOUNCE_INCREMENT = 0;
+	}
+	if (DEBOUNCE_INCREMENT >= 2) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 //*****************************************************************************
 // Reads button presses and determines which action to take.
 //*****************************************************************************
 void read_buttons(void){
 	
 	uint8_t read_val;
-	uint8_t read_up;
-	uint8_t read_down;
+	uint8_t unwanted_val;
+	bool debounced;
+	int i;
 	
-	io_expander_byte_write(I2C1_BASE, 0x01, 0x03);	// ENABLE GPIOB as inpput put this elsewhere
+	io_expander_byte_read(I2C1_BASE, MCP23017_INTFB_R, &read_val);
+	io_expander_byte_read(I2C1_BASE, 0x13, &unwanted_val); // put data at GPIOB in 
+
+	do{
+		debounced = debounce();
+		while(i < 20000){
+			i++;
+		}
+		i = 0;
+	}while(!debounced);
 	
-	io_expander_byte_read(I2C1_BASE, 0x13, &read_val); // put data at GPIOB in 
-	
-	read_val = read_val & 0x03;
-	read_up = read_val & 0x01;
-	read_down = read_val & 0x02;
-	if (read_up == 0x01) {
+	PRESSED_EVEN++;
+	if (PRESSED_EVEN == 1) {
+		return;
+	}
+	else{
+		PRESSED_EVEN = 0;
+	}
+
+	if (read_val == 0x01) {
 		JUMP = true;
 	}
-	if (read_down == 0x02){
-		if(CROUCH){
-			CROUCH = false;
-		}else{
-			CROUCH = true;
-		}
+	if (read_val == 0x02){
+		CROUCH = true;
 	}
 		
 }
@@ -362,6 +395,7 @@ main(void)
                         );
 		
 		update_health_bar(health_bar);
+		init_timers();
 		
 		//play game
     while(!game_over){
@@ -376,6 +410,12 @@ main(void)
 				//print PAUSED in upper right corner
 				
 			}	
+			
+			//if a button was pressed, determine status
+			if(BUTTON_PRESS) {
+				read_buttons();
+				BUTTON_PRESS = false;
+			}
 			
 			//CACTUS
 			if(ALERT_CACTUS){

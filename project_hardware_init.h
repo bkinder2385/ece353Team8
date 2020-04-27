@@ -29,6 +29,9 @@
 //only initializes lcd screen
 void init_screen(void);
 
+//Timers
+void init_timers(void);
+
 //Main hardware
 void init_hardware(void);
 

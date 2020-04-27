@@ -23,6 +23,7 @@
 .\obj\project_interrupts.o: ..\drivers\include\adc.h
 .\obj\project_interrupts.o: ..\peripherals\include\launchpad_io.h
 .\obj\project_interrupts.o: project_interrupts.h
+.\obj\project_interrupts.o: project_images.h
 .\obj\project_interrupts.o: main.h
 .\obj\project_interrupts.o: project_hardware_init.h
 .\obj\project_interrupts.o: ..\peripherals\include\serial_debug.h

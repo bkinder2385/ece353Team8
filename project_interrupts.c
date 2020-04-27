@@ -27,7 +27,7 @@
 volatile uint16_t PS2_X_DATA = 0;
 volatile uint16_t PS2_Y_DATA = 0;
 volatile PS2_DIR_t PS2_DIR = PS2_DIR_CENTER;
-volatile bool BUTTON_PRESS;
+volatile uint16_t jump_count = 0;
 
 //*****************************************************************************
 // Returns the most current direction that was pressed.
@@ -55,12 +55,43 @@ void TIMER2A_Handler(void)
 	PS2_DIR_t direction = PS2_DIR;
 	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
 	
-//	if (!contact) {
-//		move_image(direction, &INVADER_X_COORD, &INVADER_Y_COORD, invaderHeightPixels, invaderWidthPixels);
-//		ALERT_INVADER = true;
-//	}
-    // Clear the interrupt
+	if (contact) {
+		//clear cactus
+		ALERT_CACTUS = false;
+	}else{
+		move_image(direction, &CACTUS_X_COORD, &CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels);
+		ALERT_CACTUS = true;
+	}
+	
+  // Clear the interrupt
 	TIMER2->ICR |= TIMER_ICR_TATOCINT;
+}
+
+//This controls when and how the Trex jumps
+void TIMER3A_Handler(void){
+	if(JUMP){
+		jump_count = 110;
+		JUMP = false;
+	}
+	if(jump_count > 0){
+		if(jump_count > 55){
+			if(CROUCH){
+				move_image(PS2_DIR_UP, &TREX_X_COORD, &TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels);
+			}else {
+				move_image(PS2_DIR_UP, &TREX_X_COORD, &TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels);
+			}
+		}else {
+			if(jump_count > 55){
+				if(CROUCH){
+					move_image(PS2_DIR_DOWN, &TREX_X_COORD, &TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels);
+				}else {
+					move_image(PS2_DIR_DOWN, &TREX_X_COORD, &TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels);
+				}
+			}
+		}
+		jump_count--;
+	}
+	ALERT_TREX = true;
 }
 
 // is called when a push button interrupts. Sets button boolean.

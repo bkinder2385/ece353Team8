@@ -37,11 +37,20 @@ void init_screen(void)
   lcd_clear_screen(LCD_COLOR_BLACK);
 }
 
+//initialize timers
+void init_timers(void){
+		//timer interrupts
+//	gp_timer_config_32(TIMER2_BASE, TIMER_TAMR_TAMR_PERIOD, 1000000, false, true);
+  gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 1000000, false, true);
+  //gp_timer_config_32(TIMER4_BASE, TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
+
+}
+
 void init_hardware(void)
 {
+	uint8_t read_val;
 	//Initializing launchpad
-	//  init_serial_debug();	
-	lp_io_init();
+	init_serial_debug(true, true);	
 	
 	//joystick initialize
 	ps2_initialize();
@@ -58,14 +67,23 @@ void init_hardware(void)
 	//LCD screen
 	init_screen();
 	
-	// set up push button interrupts; this is not quite right. 
-	gpio_enable_port(GPIOF_BASE);
-	gpio_config_digital_enable(GPIOF_BASE, GPIOF_IRQn);
-	gpio_config_enable_input(GPIOF_BASE, GPIOF_IRQn);
-	gpio_config_falling_edge_irq(GPIOF_BASE, PF0);
+	//turn on interrupts from io expander
+	io_expander_byte_write(I2C1_BASE, 0x00, 0x00);
+	io_expander_byte_write(I2C1_BASE, MCP23017_IODIRB_R, 0xFF);	// ENABLE AS INPUTS, 
+	io_expander_byte_write(I2C1_BASE, MCP23017_INTCONB_R, 0x00); // interrupt compared to previous value
+	io_expander_byte_write(I2C1_BASE, MCP23017_GPINTENB_R, 0x0F);  // intrrupt on change
+	io_expander_byte_write(I2C1_BASE, MCP23017_GPPUB_R, 0x0F);		// pull-up resistor
+	
+	// set up push button interrupts
+	gpio_enable_port(IO_EXPANDER_IRQ_GPIO_BASE);
+	gpio_config_digital_enable(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
+	gpio_config_enable_input(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
+	gpio_config_enable_pullup(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
+	gpio_config_falling_edge_irq(IO_EXPANDER_IRQ_GPIO_BASE, GPIO_RIS_GPIO_M);
 	
 	// turn on interrupts in the NVIC
-	NVIC_SetPriority(gpio_get_irq_num(GPIOF_BASE), 1);
-	NVIC_EnableIRQ(gpio_get_irq_num(GPIOF_BASE));
+	NVIC_SetPriority(gpio_get_irq_num(IO_EXPANDER_IRQ_GPIO_BASE), 1);
+	NVIC_EnableIRQ(gpio_get_irq_num(IO_EXPANDER_IRQ_GPIO_BASE));
 
+  io_expander_byte_read(I2C1_BASE, MCP23017_GPIOB_R, &read_val);
 }
