@@ -139,7 +139,7 @@ i2c_status_t io_expander_byte_write
 i2c_status_t io_expander_byte_read
 ( 
   uint32_t  i2c_base,
-  uint8_t  address,
+  uint8_t  address_read,
   uint8_t   *data
 )
 {
@@ -180,8 +180,8 @@ i2c_status_t io_expander_byte_read
 	//uint8_t addressLow = (address);
 	status = i2cSendByte(
      i2c_base,
-     (uint8_t)address ,
-     I2C_MCS_RUN);
+     (uint8_t)address_read,
+     I2C_MCS_START | I2C_MCS_RUN);
 	if (status != I2C_OK){
 		return status;
 	}

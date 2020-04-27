@@ -3,6 +3,7 @@
 .\obj\project_hardware_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\project_hardware_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\project_hardware_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\project_hardware_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\obj\project_hardware_init.o: C:\Users\bkind\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123\TM4C123.h
 .\obj\project_hardware_init.o: C:\Users\bkind\AppData\Local\Arm\Packs\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C123\TM4C123GH6PM.h
 .\obj\project_hardware_init.o: C:\Users\bkind\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include\core_cm4.h
@@ -26,7 +27,7 @@
 .\obj\project_hardware_init.o: project_hardware_init.h
 .\obj\project_hardware_init.o: ..\peripherals\include\serial_debug.h
 .\obj\project_hardware_init.o: ..\drivers\include\pc_buffer.h
-.\obj\project_hardware_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\obj\project_hardware_init.o: ..\drivers\include\uart.h
 .\obj\project_hardware_init.o: ..\peripherals\include\ft6x06.h
 .\obj\project_hardware_init.o: ..\drivers\include\i2c.h
+.\obj\project_hardware_init.o: io_expander.h

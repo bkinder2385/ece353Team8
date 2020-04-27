@@ -19,10 +19,38 @@
 // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#ifndef __INTERRUPTS_H__
-#define __INTERRUPTS_H__
+#ifndef __PROJECT_INTERRUPTS_H__
+#define __PROJECT_INTERRUPTS_H__
 
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "TM4C123.h"
+#include "gpio_port.h"
+#include "ps2.h"
+#include "lcd.h"
+#include "project_images.h"
 #include "main.h"
+
+extern volatile uint16_t PS2_X_DATA;
+extern volatile uint16_t PS2_Y_DATA;
+extern volatile PS2_DIR_t PS2_DIR;
+extern volatile bool BUTTON_PRESS;
+
+//*****************************************************************************
+// Returns the most current direction that was pressed.
+//*****************************************************************************
+PS2_DIR_t ps2_get_direction(void);
+
+//*****************************************************************************
+// TIMER2 ISR is used to determine when to move the TREX and CACTUS
+//*****************************************************************************
+void TIMER2A_Handler(void);
+
+// is called when a push button interrupts. Sets button boolean.
+void GPIOF_Handler(void);
 
 
 #endif

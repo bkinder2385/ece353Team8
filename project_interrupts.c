@@ -27,6 +27,7 @@
 volatile uint16_t PS2_X_DATA = 0;
 volatile uint16_t PS2_Y_DATA = 0;
 volatile PS2_DIR_t PS2_DIR = PS2_DIR_CENTER;
+volatile bool BUTTON_PRESS;
 
 //*****************************************************************************
 // Returns the most current direction that was pressed.
@@ -52,7 +53,7 @@ PS2_DIR_t ps2_get_direction(void)
 void TIMER2A_Handler(void)
 {	
 	PS2_DIR_t direction = PS2_DIR;
-//	bool contact = contact_edge( direction, INVADER_X_COORD,  INVADER_Y_COORD, invaderHeightPixels, invaderWidthPixels);
+	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
 	
 //	if (!contact) {
 //		move_image(direction, &INVADER_X_COORD, &INVADER_Y_COORD, invaderHeightPixels, invaderWidthPixels);
@@ -62,4 +63,11 @@ void TIMER2A_Handler(void)
 	TIMER2->ICR |= TIMER_ICR_TATOCINT;
 }
 
-
+// is called when a push button interrupts. Sets button boolean.
+void GPIOF_Handler(void)
+{
+	if (!BUTTON_PRESS) {
+		BUTTON_PRESS = true;
+	}
+	GPIOF->ICR |= 0x01; // clear the interrupt
+}

@@ -37,6 +37,12 @@ volatile bool ALERT_TREX = true;
 volatile bool ALERT_PTER = false;
 volatile bool ALERT_CACTUS = false;
 
+//Action Determination
+volatile bool JUMP = false;
+volatile bool CROUCH = false;
+
+
+
 //pause status
 volatile bool PAUSED = false;
 
@@ -56,6 +62,77 @@ void EnableInterrupts(void)
   __asm {
     CPSIE  I
   }
+}
+
+//*****************************************************************************
+// Determines if any part of the image would be off the screen if the image
+// is moved in the specified direction. Only left and right valid for cactus 
+// and pterodactyls.
+//*****************************************************************************
+bool contact_edge(
+    volatile PS2_DIR_t direction,
+    volatile uint16_t x_coord, 
+    volatile uint16_t y_coord, 
+    uint8_t image_width
+)
+{
+	//bool return_value;
+	switch(direction) {
+		case PS2_DIR_LEFT:
+		{
+			if((x_coord - (image_width/2)) <= 0){
+				return true;
+			}
+		}
+		case PS2_DIR_RIGHT:
+		{
+			if((x_coord + (image_width/2)) >= 239){
+				return true;
+			}
+		}
+		default:{
+			return false;
+		}
+	}
+}
+
+//*****************************************************************************
+// Moves the image by one pixel in the provided direction.  The second and 
+// third parameter should modify the current location of the image (pass by
+// reference)
+//*****************************************************************************
+void move_image(
+        volatile PS2_DIR_t direction,
+        volatile uint16_t *x_coord, 
+        volatile uint16_t *y_coord, 
+        uint8_t image_height, 
+        uint8_t image_width)
+{
+	switch (direction){
+		 case PS2_DIR_UP: //ONLY USE FOR JUMP METHOD
+		 {
+			 *y_coord = *y_coord + 1;
+			 break;
+		 }
+		 case PS2_DIR_DOWN: //ONLY USE FOR JUMP METHOD
+		 {
+			 *y_coord = *y_coord - 1;
+			 break;
+		 }
+		 case PS2_DIR_LEFT:
+		 {
+			 *x_coord = *x_coord - 1;
+			 break;
+		 }
+		 case PS2_DIR_RIGHT:
+		 {
+			 *x_coord = *x_coord + 1;
+			 break;
+		 }
+		 default:
+			 break;
+	 }
+	 return;
 }
 
 //*****************************************************************************
@@ -157,6 +234,35 @@ void update_health_bar(int health_bar){
 }
 
 //*****************************************************************************
+// Reads button presses and determines which action to take.
+//*****************************************************************************
+void read_buttons(void){
+	
+	uint8_t read_val;
+	uint8_t read_up;
+	uint8_t read_down;
+	
+	io_expander_byte_write(I2C1_BASE, 0x01, 0x03);	// ENABLE GPIOB as inpput put this elsewhere
+	
+	io_expander_byte_read(I2C1_BASE, 0x13, &read_val); // put data at GPIOB in 
+	
+	read_val = read_val & 0x03;
+	read_up = read_val & 0x01;
+	read_down = read_val & 0x02;
+	if (read_up == 0x01) {
+		JUMP = true;
+	}
+	if (read_down == 0x02){
+		if(CROUCH){
+			CROUCH = false;
+		}else{
+			CROUCH = true;
+		}
+	}
+		
+}
+
+//*****************************************************************************
 // Game Setup. Initializes lcd and capacitive touch. Shows START button and 
 // game title (TBD) and trex_standing?? if START is touched, it returns true.
 // Returns false otherwise.
@@ -220,7 +326,6 @@ main(void)
 		bool game_start = false;
 		bool game_over = false;
 	  bool hit = false;
-	  bool crouching = false;
 		int health_bar = 8;
 		
 		//init_screen();
@@ -288,7 +393,7 @@ main(void)
                         );
 				
 				//check if hit
-				if(crouching){
+				if(CROUCH){
 					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
 														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
 														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
@@ -329,7 +434,7 @@ main(void)
                         );
 				
 				//check if hit
-				if(crouching){
+				if(CROUCH){
 					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
 														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
 														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
@@ -358,7 +463,7 @@ main(void)
 			if(ALERT_TREX){
 				ALERT_TREX = false;
 				
-				if(crouching){
+				if(CROUCH){
 					lcd_draw_image(
                           TREX_X_COORD,                       // X Center Point
                           trexcrouchingWidthPixels,   // Image Horizontal Width
@@ -381,7 +486,7 @@ main(void)
 				}
 				
 				//check if hit
-				if(crouching){
+				if(CROUCH){
 					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
 														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
 														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);

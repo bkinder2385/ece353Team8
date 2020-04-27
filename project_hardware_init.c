@@ -21,6 +21,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "main.h"
+#include "io_expander.h"
 #include "serial_debug.h"
 #include "ft6x06.h"
 #include "project_hardware_init.h"
@@ -52,8 +53,19 @@ void init_hardware(void)
 	ft6x06_init();
 	
 	//I2C I/O Expander
-	//io_expander_init();
+	io_expander_init();
 	
 	//LCD screen
 	init_screen();
+	
+	// set up push button interrupts; this is not quite right. 
+	gpio_enable_port(GPIOF_BASE);
+	gpio_config_digital_enable(GPIOF_BASE, GPIOF_IRQn);
+	gpio_config_enable_input(GPIOF_BASE, GPIOF_IRQn);
+	gpio_config_falling_edge_irq(GPIOF_BASE, PF0);
+	
+	// turn on interrupts in the NVIC
+	NVIC_SetPriority(gpio_get_irq_num(GPIOF_BASE), 1);
+	NVIC_EnableIRQ(gpio_get_irq_num(GPIOF_BASE));
+
 }
