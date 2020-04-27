@@ -48,7 +48,7 @@ PS2_DIR_t ps2_get_direction(void)
 }
 
 //*****************************************************************************
-// TIMER2 ISR is used to determine when to move the TREX and CACTUS
+// TIMER2 ISR is used to determine when to move the PTERODACTYL and CACTUS
 //*****************************************************************************
 void TIMER2A_Handler(void)
 {	
@@ -102,3 +102,16 @@ void GPIOF_Handler(void)
 	}
 	GPIOF->ICR |= 0x01; // clear the interrupt
 }
+
+//*****************************************************************************
+// ADC0 SS2 ISR
+//*****************************************************************************
+void ADC0SS2_Handler(void)
+{
+	PS2_X_DATA = ADC0->SSFIFO2;
+	PS2_Y_DATA = ADC0->SSFIFO2;
+	PS2_DIR = ps2_get_direction();
+  // Clear the interrupt
+  ADC0->ISC |= ADC_ISC_IN2;
+}
+

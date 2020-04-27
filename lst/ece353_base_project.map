@@ -541,22 +541,22 @@ Image Symbol Table
     .text                                    0x00001144   Section        0  adc.o(.text)
     .text                                    0x000011e4   Section        0  gpio_port.o(.text)
     verify_base_addr                         0x000011e5   Thumb Code    64  gpio_port.o(.text)
-    .text                                    0x000014c4   Section        0  i2c.o(.text)
-    .text                                    0x000016cc   Section        0  pc_buffer.o(.text)
-    .text                                    0x00001748   Section        0  timers.o(.text)
-    verify_base_addr                         0x00001749   Thumb Code    64  timers.o(.text)
-    get_clock_masks                          0x000017d3   Thumb Code   106  timers.o(.text)
-    .text                                    0x00001994   Section        0  uart.o(.text)
-    .text                                    0x00001c28   Section        0  ft6x06.o(.text)
-    ft6x06_set_addr                          0x00001c29   Thumb Code    52  ft6x06.o(.text)
-    ft6x06_read_data                         0x00001c5d   Thumb Code    52  ft6x06.o(.text)
-    .text                                    0x00001e40   Section        0  lcd.o(.text)
-    delayms                                  0x00001e41   Thumb Code    26  lcd.o(.text)
-    lcd_write_cmd_u8                         0x00001e5b   Thumb Code    40  lcd.o(.text)
-    lcd_write_data_u8                        0x00001e83   Thumb Code    28  lcd.o(.text)
-    .text                                    0x000022d0   Section        0  ps2.o(.text)
-    initialize_adc_gpio_pins                 0x000022d1   Thumb Code    58  ps2.o(.text)
-    .text                                    0x00002340   Section        0  serial_debug.o(.text)
+    .text                                    0x000014c8   Section        0  i2c.o(.text)
+    .text                                    0x000016d0   Section        0  pc_buffer.o(.text)
+    .text                                    0x0000174c   Section        0  timers.o(.text)
+    verify_base_addr                         0x0000174d   Thumb Code    64  timers.o(.text)
+    get_clock_masks                          0x000017d7   Thumb Code   106  timers.o(.text)
+    .text                                    0x00001998   Section        0  uart.o(.text)
+    .text                                    0x00001c2c   Section        0  ft6x06.o(.text)
+    ft6x06_set_addr                          0x00001c2d   Thumb Code    52  ft6x06.o(.text)
+    ft6x06_read_data                         0x00001c61   Thumb Code    52  ft6x06.o(.text)
+    .text                                    0x00001e44   Section        0  lcd.o(.text)
+    delayms                                  0x00001e45   Thumb Code    26  lcd.o(.text)
+    lcd_write_cmd_u8                         0x00001e5f   Thumb Code    40  lcd.o(.text)
+    lcd_write_data_u8                        0x00001e87   Thumb Code    28  lcd.o(.text)
+    .text                                    0x000022d4   Section        0  ps2.o(.text)
+    initialize_adc_gpio_pins                 0x000022d5   Thumb Code    58  ps2.o(.text)
+    .text                                    0x00002344   Section        0  serial_debug.o(.text)
     .text                                    0x00002550   Section      252  startup_tm4c123.o(.text)
     $v0                                      0x00002550   Number         0  startup_tm4c123.o(.text)
     .text                                    0x0000264c   Section        0  system_tm4c123.o(.text)
@@ -682,49 +682,49 @@ Image Symbol Table
     gpio_config_enable_pulldown              0x000013ab   Thumb Code    40  gpio_port.o(.text)
     gpio_config_analog_enable                0x000013d3   Thumb Code    50  gpio_port.o(.text)
     gpio_config_alternate_function           0x00001405   Thumb Code    40  gpio_port.o(.text)
-    gpio_config_port_control                 0x0000142d   Thumb Code    50  gpio_port.o(.text)
-    gpio_config_open_drain                   0x0000145f   Thumb Code    34  gpio_port.o(.text)
-    gpio_config_falling_edge_irq             0x00001481   Thumb Code    34  gpio_port.o(.text)
-    initializeI2CMaster                      0x000014c5   Thumb Code   160  i2c.o(.text)
-    i2cVerifyBaseAddr                        0x00001565   Thumb Code    36  i2c.o(.text)
-    i2cSetSlaveAddr                          0x00001589   Thumb Code    30  i2c.o(.text)
-    i2cStop                                  0x000015a7   Thumb Code    26  i2c.o(.text)
-    I2CMasterBusy                            0x000015c1   Thumb Code    34  i2c.o(.text)
-    I2CMasterAdrAck                          0x000015e3   Thumb Code    34  i2c.o(.text)
-    I2CMasterDatAck                          0x00001605   Thumb Code    34  i2c.o(.text)
-    i2cSendByte                              0x00001627   Thumb Code    82  i2c.o(.text)
-    i2cGetByte                               0x00001679   Thumb Code    60  i2c.o(.text)
-    pc_buffer_init                           0x000016cd   Thumb Code    26  pc_buffer.o(.text)
-    pc_buffer_add                            0x000016e7   Thumb Code    28  pc_buffer.o(.text)
-    pc_buffer_remove                         0x00001703   Thumb Code    30  pc_buffer.o(.text)
-    pc_buffer_empty                          0x00001721   Thumb Code    18  pc_buffer.o(.text)
-    pc_buffer_full                           0x00001733   Thumb Code    22  pc_buffer.o(.text)
-    timer_get_irq_num                        0x00001789   Thumb Code    74  timers.o(.text)
-    gp_timer_wait                            0x0000183d   Thumb Code    66  timers.o(.text)
-    gp_timer_config_32                       0x0000187f   Thumb Code   252  timers.o(.text)
-    verify_uart_base                         0x00001995   Thumb Code    54  uart.o(.text)
-    uart_get_rcgc_mask                       0x000019cb   Thumb Code    68  uart.o(.text)
-    uart_get_pr_mask                         0x00001a0f   Thumb Code    68  uart.o(.text)
-    uart_get_irq_num                         0x00001a53   Thumb Code    68  uart.o(.text)
-    uart_tx_poll                             0x00001a97   Thumb Code    38  uart.o(.text)
-    uart_tx_poll_string                      0x00001abd   Thumb Code    50  uart.o(.text)
-    uart_rx_poll                             0x00001aef   Thumb Code    70  uart.o(.text)
-    uart_init                                0x00001b35   Thumb Code   222  uart.o(.text)
-    ft6x06_read_td_status                    0x00001c91   Thumb Code    44  ft6x06.o(.text)
-    ft6x06_read_x                            0x00001cbd   Thumb Code   112  ft6x06.o(.text)
-    ft6x06_read_y                            0x00001d2d   Thumb Code   116  ft6x06.o(.text)
-    ft6x06_init                              0x00001da1   Thumb Code   156  ft6x06.o(.text)
-    lcd_set_pos                              0x00001e9f   Thumb Code    58  lcd.o(.text)
-    lcd_clear_screen                         0x00001ed9   Thumb Code    52  lcd.o(.text)
-    lcd_draw_image                           0x00001f0d   Thumb Code   242  lcd.o(.text)
-    lcd_config_gpio                          0x00001fff   Thumb Code   152  lcd.o(.text)
-    lcd_config_screen                        0x00002097   Thumb Code   568  lcd.o(.text)
-    ps2_initialize                           0x0000230b   Thumb Code    14  ps2.o(.text)
-    ps2_get_x                                0x00002319   Thumb Code    16  ps2.o(.text)
-    ps2_get_y                                0x00002329   Thumb Code    16  ps2.o(.text)
-    init_serial_debug                        0x00002341   Thumb Code   102  serial_debug.o(.text)
-    serial_debug_rx                          0x000023a7   Thumb Code    46  serial_debug.o(.text)
-    serial_debug_tx                          0x000023d5   Thumb Code    88  serial_debug.o(.text)
+    gpio_config_port_control                 0x0000142d   Thumb Code    54  gpio_port.o(.text)
+    gpio_config_open_drain                   0x00001463   Thumb Code    34  gpio_port.o(.text)
+    gpio_config_falling_edge_irq             0x00001485   Thumb Code    34  gpio_port.o(.text)
+    initializeI2CMaster                      0x000014c9   Thumb Code   160  i2c.o(.text)
+    i2cVerifyBaseAddr                        0x00001569   Thumb Code    36  i2c.o(.text)
+    i2cSetSlaveAddr                          0x0000158d   Thumb Code    30  i2c.o(.text)
+    i2cStop                                  0x000015ab   Thumb Code    26  i2c.o(.text)
+    I2CMasterBusy                            0x000015c5   Thumb Code    34  i2c.o(.text)
+    I2CMasterAdrAck                          0x000015e7   Thumb Code    34  i2c.o(.text)
+    I2CMasterDatAck                          0x00001609   Thumb Code    34  i2c.o(.text)
+    i2cSendByte                              0x0000162b   Thumb Code    82  i2c.o(.text)
+    i2cGetByte                               0x0000167d   Thumb Code    60  i2c.o(.text)
+    pc_buffer_init                           0x000016d1   Thumb Code    26  pc_buffer.o(.text)
+    pc_buffer_add                            0x000016eb   Thumb Code    28  pc_buffer.o(.text)
+    pc_buffer_remove                         0x00001707   Thumb Code    30  pc_buffer.o(.text)
+    pc_buffer_empty                          0x00001725   Thumb Code    18  pc_buffer.o(.text)
+    pc_buffer_full                           0x00001737   Thumb Code    22  pc_buffer.o(.text)
+    timer_get_irq_num                        0x0000178d   Thumb Code    74  timers.o(.text)
+    gp_timer_wait                            0x00001841   Thumb Code    66  timers.o(.text)
+    gp_timer_config_32                       0x00001883   Thumb Code   252  timers.o(.text)
+    verify_uart_base                         0x00001999   Thumb Code    54  uart.o(.text)
+    uart_get_rcgc_mask                       0x000019cf   Thumb Code    68  uart.o(.text)
+    uart_get_pr_mask                         0x00001a13   Thumb Code    68  uart.o(.text)
+    uart_get_irq_num                         0x00001a57   Thumb Code    68  uart.o(.text)
+    uart_tx_poll                             0x00001a9b   Thumb Code    38  uart.o(.text)
+    uart_tx_poll_string                      0x00001ac1   Thumb Code    50  uart.o(.text)
+    uart_rx_poll                             0x00001af3   Thumb Code    70  uart.o(.text)
+    uart_init                                0x00001b39   Thumb Code   222  uart.o(.text)
+    ft6x06_read_td_status                    0x00001c95   Thumb Code    44  ft6x06.o(.text)
+    ft6x06_read_x                            0x00001cc1   Thumb Code   112  ft6x06.o(.text)
+    ft6x06_read_y                            0x00001d31   Thumb Code   116  ft6x06.o(.text)
+    ft6x06_init                              0x00001da5   Thumb Code   156  ft6x06.o(.text)
+    lcd_set_pos                              0x00001ea3   Thumb Code    58  lcd.o(.text)
+    lcd_clear_screen                         0x00001edd   Thumb Code    52  lcd.o(.text)
+    lcd_draw_image                           0x00001f11   Thumb Code   242  lcd.o(.text)
+    lcd_config_gpio                          0x00002003   Thumb Code   152  lcd.o(.text)
+    lcd_config_screen                        0x0000209b   Thumb Code   568  lcd.o(.text)
+    ps2_initialize                           0x0000230f   Thumb Code    14  ps2.o(.text)
+    ps2_get_x                                0x0000231d   Thumb Code    16  ps2.o(.text)
+    ps2_get_y                                0x0000232d   Thumb Code    16  ps2.o(.text)
+    init_serial_debug                        0x00002345   Thumb Code   102  serial_debug.o(.text)
+    serial_debug_rx                          0x000023ab   Thumb Code    46  serial_debug.o(.text)
+    serial_debug_tx                          0x000023d9   Thumb Code    84  serial_debug.o(.text)
     fputc                                    0x0000242d   Thumb Code    66  serial_debug.o(.text)
     fgetc                                    0x0000246f   Thumb Code    50  serial_debug.o(.text)
     UART0_Handler                            0x000024a1   Thumb Code   152  serial_debug.o(.text)
@@ -940,16 +940,16 @@ Memory Map of the image
     0x00000e00   0x00000e00   0x0000019c   Code   RO          173    .text               project_interrupts.o
     0x00000f9c   0x00000f9c   0x000001a8   Code   RO          216    .text               io_expander.o
     0x00001144   0x00001144   0x000000a0   Code   RO          247    .text               adc.o
-    0x000011e4   0x000011e4   0x000002e0   Code   RO          275    .text               gpio_port.o
-    0x000014c4   0x000014c4   0x00000208   Code   RO          299    .text               i2c.o
-    0x000016cc   0x000016cc   0x0000007c   Code   RO          320    .text               pc_buffer.o
-    0x00001748   0x00001748   0x0000024c   Code   RO          365    .text               timers.o
-    0x00001994   0x00001994   0x00000294   Code   RO          389    .text               uart.o
-    0x00001c28   0x00001c28   0x00000218   Code   RO          470    .text               ft6x06.o
-    0x00001e40   0x00001e40   0x0000048e   Code   RO          518    .text               lcd.o
-    0x000022ce   0x000022ce   0x00000002   PAD
-    0x000022d0   0x000022d0   0x00000070   Code   RO          548    .text               ps2.o
-    0x00002340   0x00002340   0x00000210   Code   RO          572    .text               serial_debug.o
+    0x000011e4   0x000011e4   0x000002e4   Code   RO          275    .text               gpio_port.o
+    0x000014c8   0x000014c8   0x00000208   Code   RO          299    .text               i2c.o
+    0x000016d0   0x000016d0   0x0000007c   Code   RO          320    .text               pc_buffer.o
+    0x0000174c   0x0000174c   0x0000024c   Code   RO          365    .text               timers.o
+    0x00001998   0x00001998   0x00000294   Code   RO          389    .text               uart.o
+    0x00001c2c   0x00001c2c   0x00000218   Code   RO          470    .text               ft6x06.o
+    0x00001e44   0x00001e44   0x0000048e   Code   RO          518    .text               lcd.o
+    0x000022d2   0x000022d2   0x00000002   PAD
+    0x000022d4   0x000022d4   0x00000070   Code   RO          548    .text               ps2.o
+    0x00002344   0x00002344   0x0000020c   Code   RO          572    .text               serial_debug.o
     0x00002550   0x00002550   0x000000fc   Code   RO          636  * .text               startup_tm4c123.o
     0x0000264c   0x0000264c   0x00000250   Code   RO          643    .text               system_tm4c123.o
     0x0000289c   0x0000289c   0x00000062   Code   RO          979    .text               mc_w.l(uldiv.o)
@@ -1004,7 +1004,7 @@ Image component sizes
 
        160         14          0          0          0       1551   adc.o
        536          4          0          0          0       2596   ft6x06.o
-       736         34          0          0          0       5674   gpio_port.o
+       740         34          0          0          0       5674   gpio_port.o
        520         24          0          0          0       3777   i2c.o
        424          6          0          0          0       2172   io_expander.o
       1226         30          0          0          0       3961   lcd.o
@@ -1014,7 +1014,7 @@ Image component sizes
          0          0       6475          0          0       1834   project_images.o
        412         86          0          8          0       1965   project_interrupts.o
        112          8          0          0          0        993   ps2.o
-       528         24          0          2         28       5893   serial_debug.o
+       524         24          0          2         28       5893   serial_debug.o
        252         10        620          0       4096       5492   startup_tm4c123.o
        592        138          0          4          0       1657   system_tm4c123.o
        588         26          0          0          0       2897   timers.o
