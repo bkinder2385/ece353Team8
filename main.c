@@ -27,7 +27,7 @@
 #define CROUCH_COMP 6
 
 //image locations
-volatile uint16_t PTERODACTYL_X_COORD = 215;
+volatile uint16_t PTERODACTYL_X_COORD = 214;
 volatile uint16_t PTERODACTYL_Y_COORD = 165; //LOWEST DESIRED Y COORD	
 volatile uint16_t TREX_X_COORD = 34;
 volatile uint16_t TREX_Y_COORD = 204;
@@ -86,6 +86,12 @@ bool contact_edge(
 		case PS2_DIR_RIGHT:
 		{
 			if((x_coord - (image_width/2)) <= 1){
+				return true;
+			}
+		}
+		case PS2_DIR_LEFT:
+		{
+			if((x_coord + (image_width/2)) >= 240){
 				return true;
 			}
 		}
@@ -159,18 +165,17 @@ bool check_if_hit(
 	bool overlap = false;
 	
 	//Cactus hit		
-	if ( ( ( (cactus_y_coord + (cactus_height/2)) < (trex_y_coord + (trex_height/2)) ) & 
-			( (cactus_y_coord + (cactus_height/2)) > (trex_y_coord - (trex_height/2)) ) ) |
-			( ( (cactus_y_coord - (cactus_height/2)) < (trex_y_coord + (trex_height/2)) ) & 
-			( (cactus_y_coord - (cactus_height/2)) > (trex_y_coord - (trex_height/2)) ) )){
-				if ((( (cactus_x_coord + (cactus_width/2)) < (trex_x_coord + (trex_width/2)) ) & 
+	if ((( (cactus_x_coord + (cactus_width/2)) < (trex_x_coord + (trex_width/2)) ) & 
 						( (cactus_x_coord + (cactus_width/2)) > (trex_x_coord - (trex_width/2)))) |
 						(( (cactus_x_coord - (cactus_width/2)) < (trex_x_coord + (trex_width/2))) & 
 						( (cactus_x_coord - (cactus_width/2)) > (trex_x_coord - (trex_width/2))))){
 							
-							overlap = true;
-							return overlap;
-				}
+							if( ((cactus_y_coord - (cactus_height/2)) < (trex_y_coord + (trex_height/2))) & 
+						( (cactus_y_coord - (cactus_height/2)) > (trex_y_coord - (trex_height/2)))){
+							
+							  overlap = true;
+								return overlap;
+							}
 	}
 			
 	//Pterodactyl hit
@@ -536,7 +541,7 @@ main(void)
                           LCD_COLOR_BLACK,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
-				PTERODACTYL_X_COORD = 215;
+				PTERODACTYL_X_COORD = 214;
 				CLEAR_PTER = false;
 				P_FLY = false;
 			}
@@ -569,4 +574,7 @@ main(void)
 				}
 			}
 		};
+		
+		//GAME OVER SCREEN
+		
 }

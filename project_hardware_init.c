@@ -41,9 +41,9 @@ void init_screen(void)
 void init_timers(void){
 		//timer interrupts
 	gp_timer_config_32(TIMER2_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
-  gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 380000, false, true);
+  gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 390000, false, true);
   gp_timer_config_16(TIMER4_BASE, TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
-	gp_timer_config_32(TIMER5_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
+//	gp_timer_config_32(TIMER5_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
 
 }
 
@@ -67,6 +67,10 @@ void init_hardware(void)
 	
 	//LCD screen
 	init_screen();
+	
+	// led to blink
+	lp_io_init();
+	gp_timer_config_32(TIMER1_BASE, TIMER_TAMR_TAMR_PERIOD, 25000000, false, true);
 	
 	//turn on interrupts from io expander
 	io_expander_byte_write(I2C1_BASE, 0x00, 0x00);
