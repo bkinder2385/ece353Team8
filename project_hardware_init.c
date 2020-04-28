@@ -40,9 +40,9 @@ void init_screen(void)
 //initialize timers
 void init_timers(void){
 		//timer interrupts
-//	gp_timer_config_32(TIMER2_BASE, TIMER_TAMR_TAMR_PERIOD, 1000000, false, true);
-  gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 1000000, false, true);
-  //gp_timer_config_32(TIMER4_BASE, TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
+	gp_timer_config_32(TIMER2_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
+  gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 380000, false, true);
+  gp_timer_config_16(TIMER4_BASE, TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
 
 }
 
@@ -79,7 +79,7 @@ void init_hardware(void)
 	gpio_config_digital_enable(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
 	gpio_config_enable_input(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
 	gpio_config_enable_pullup(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
-	gpio_config_falling_edge_irq(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
+	gpio_config_falling_edge_irq(IO_EXPANDER_IRQ_GPIO_BASE, PF0);
 	
 	// turn on interrupts in the NVIC
 	NVIC_SetPriority(gpio_get_irq_num(IO_EXPANDER_IRQ_GPIO_BASE), 1);

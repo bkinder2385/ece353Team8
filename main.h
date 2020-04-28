@@ -58,7 +58,10 @@ extern volatile uint16_t CACTUS_Y_COORD;
 //alerts for image rendering
 extern volatile bool ALERT_TREX;
 extern volatile bool ALERT_PTER;
+extern volatile bool CLEAR_PTER;
 extern volatile bool ALERT_CACTUS;
+extern volatile bool CLEAR_CACTUS;
+
 
 //Action Determination
 extern volatile bool JUMP;

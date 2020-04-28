@@ -24,9 +24,11 @@
 #include "io_expander.h"
 #include "project_images.h"
 
+#define CROUCH_COMP 6
+
 //image locations
-volatile uint16_t PTERODACTYL_X_COORD = 240;
-volatile uint16_t PTERODACTYL_Y_COORD = 240;
+volatile uint16_t PTERODACTYL_X_COORD = 215;
+volatile uint16_t PTERODACTYL_Y_COORD = 165; //LOWEST DESIRED Y COORD	
 volatile uint16_t TREX_X_COORD = 34;
 volatile uint16_t TREX_Y_COORD = 204;
 volatile uint16_t CACTUS_X_COORD = 219;
@@ -35,7 +37,9 @@ volatile uint16_t CACTUS_Y_COORD = 207;
 //alerts for image rendering
 volatile bool ALERT_TREX = true;
 volatile bool ALERT_PTER = false;
+volatile bool CLEAR_PTER = false;
 volatile bool ALERT_CACTUS = false;
+volatile bool CLEAR_CACTUS = false;
 
 //Action Determination
 volatile bool BUTTON_PRESS = false;
@@ -46,6 +50,7 @@ int DEBOUNCE_INCREMENT;
 
 //pause status
 volatile bool PAUSED = false;
+
 
 //*****************************************************************************
 //*****************************************************************************
@@ -79,24 +84,25 @@ bool contact_edge(
 {
 	bool hit;
 	switch(direction) {
-		case PS2_DIR_LEFT:
-		{
-			if((x_coord - (image_width/2)) <= 0){
-				return true;
-			}
-		}
 		case PS2_DIR_RIGHT:
 		{
-			if((x_coord + (image_width/2)) >= 239){
+			if((x_coord - (image_width/2)) <= 1){
 				return true;
 			}
 		}
 		default:{
 		}
 	}
-	hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
+	if(CROUCH){
+		
+		hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
 														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
 														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
+	}else{
+		hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
+														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
+	}
 	return hit;
 }
 
@@ -113,22 +119,22 @@ void move_image(
         uint8_t image_width)
 {
 	switch (direction){
-		 case PS2_DIR_UP: //ONLY USE FOR JUMP METHOD
+		 case PS2_DIR_DOWN: //ONLY USE FOR JUMP METHOD
 		 {
 			 *y_coord = *y_coord + 1;
 			 break;
 		 }
-		 case PS2_DIR_DOWN: //ONLY USE FOR JUMP METHOD
+		 case PS2_DIR_UP: //ONLY USE FOR JUMP METHOD
 		 {
 			 *y_coord = *y_coord - 1;
 			 break;
 		 }
-		 case PS2_DIR_LEFT:
+		 case PS2_DIR_RIGHT:
 		 {
 			 *x_coord = *x_coord - 1;
 			 break;
 		 }
-		 case PS2_DIR_RIGHT:
+		 case PS2_DIR_LEFT:
 		 {
 			 *x_coord = *x_coord + 1;
 			 break;
@@ -290,7 +296,23 @@ void read_buttons(void){
 		JUMP = true;
 	}
 	if (read_val == 0x02){
-		CROUCH = true;
+		if(CROUCH){
+			CROUCH = false;
+			TREX_Y_COORD -= CROUCH_COMP;
+		}else{
+			CROUCH = true;
+			//Clear standing trex
+					lcd_draw_image(
+                          TREX_X_COORD,                       // X Center Point
+                          trexstandingWidthPixels,   					// Image Horizontal Width
+                          TREX_Y_COORD,								        // Y Center Point
+                          trexstandingHeightPixels,  					// Image Vertical Height
+                          trexstandingBitmaps,       					// Image
+                          LCD_COLOR_BLACK,           					// Foreground Color
+                          LCD_COLOR_BLACK          						// Background Color
+                        );
+			TREX_Y_COORD += CROUCH_COMP;
+		}
 	}
 		
 }
@@ -456,6 +478,19 @@ main(void)
 						continue;
 					}
 				}
+			}else if(CLEAR_CACTUS){ //Clears cactus
+				lcd_draw_image(
+                          CACTUS_X_COORD,                       // X Center Point
+                          cactusWidthPixels,   // Image Horizontal Width
+                          CACTUS_Y_COORD,                       // Y Center Point
+                          cactusHeightPixels,  // Image Vertical Height
+                          cactusBitmaps,       // Image
+                          LCD_COLOR_BLACK,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+				CACTUS_X_COORD = 219;
+				CACTUS_Y_COORD = 207;
+				CLEAR_CACTUS = false;
 			}
 			
 			//PTERODACTYL
@@ -497,6 +532,18 @@ main(void)
 						continue;
 					}
 				}
+			}else if(CLEAR_PTER){ //Clears cactus
+				lcd_draw_image(
+                          PTERODACTYL_X_COORD,                       // X Center Point
+                          pterodactylWidthPixels,   // Image Horizontal Width
+                          PTERODACTYL_Y_COORD,                       // Y Center Point
+                          pterodactylHeightPixels,  // Image Vertical Height
+                          pterodactylBitmaps,       // Image
+                          LCD_COLOR_BLACK,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+				PTERODACTYL_X_COORD = 215;
+				CLEAR_PTER = false;
 			}
 			
 			//TREX
@@ -504,6 +551,7 @@ main(void)
 				ALERT_TREX = false;
 				
 				if(CROUCH){
+					//Draw crouched trex
 					lcd_draw_image(
                           TREX_X_COORD,                       // X Center Point
                           trexcrouchingWidthPixels,   // Image Horizontal Width
