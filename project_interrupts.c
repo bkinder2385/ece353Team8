@@ -55,7 +55,7 @@ uint16_t generate_random_number(
 // Returns whether a pterodactyl will appear
 //*****************************************************************************
 uint16_t proc_pterodactyl(){
-	return YLOCATION[generate_random_number()%8];
+	return YLOCATION[rand()%8];
 }
 
 //*****************************************************************************
@@ -83,7 +83,7 @@ void TIMER2A_Handler(void)
 {	
 	PS2_DIR_t direction = PS2_DIR;
 	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
-	uint16_t cactusProc = generate_random_number()%3;
+	uint16_t cactusProc = rand()%3;
 	
 	if (contact) {
 		//clear cactus
@@ -92,8 +92,10 @@ void TIMER2A_Handler(void)
 		ALERT_CACTUS = false;
 		//add points
 	}else if(CACTUS_RUN){
-		move_image(direction, &CACTUS_X_COORD, &CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels);
-		ALERT_CACTUS = true;
+		if(direction == (PS2_DIR_LEFT | PS2_DIR_RIGHT)){
+			move_image(direction, &CACTUS_X_COORD, &CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels);
+			ALERT_CACTUS = true;
+		}
 	}
 	
 	if(!CACTUS_RUN){
@@ -186,8 +188,8 @@ void TIMER5A_Handler(void){
 //*****************************************************************************
 void ADC0SS2_Handler(void)
 {
-	PS2_X_DATA = ADC0->SSFIFO2;
 	PS2_Y_DATA = ADC0->SSFIFO2;
+	PS2_X_DATA = ADC0->SSFIFO2;
 	PS2_DIR = ps2_get_direction();
   // Clear the interrupt
   ADC0->ISC |= ADC_ISC_IN2;

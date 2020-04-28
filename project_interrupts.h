@@ -43,17 +43,29 @@ extern volatile bool P_FLY;
 extern volatile bool CACTUS_RUN;
 
 //*****************************************************************************
-// Returns the most current direction that was pressed.
-//*****************************************************************************
-//PS2_DIR_t ps2_get_direction(void);
-
-//*****************************************************************************
 // TIMER2 ISR is used to determine when to move the TREX and CACTUS
 //*****************************************************************************
 void TIMER2A_Handler(void);
 
+//This controls when and how the Trex jumps
+void TIMER3A_Handler(void);
+
 // is called when a push button interrupts. Sets button boolean.
 void GPIOF_Handler(void);
 
+//*****************************************************************************
+// TIMER4 ISR is used to trigger the ADC
+//*****************************************************************************
+void TIMER4A_Handler(void);
+
+//*****************************************************************************
+// TIMER5 ISR is used to determine when to move the PTERODACTYL
+//*****************************************************************************
+void TIMER5A_Handler(void);
+
+//*****************************************************************************
+// ADC0 SS2 ISR
+//*****************************************************************************
+void ADC0SS2_Handler(void);
 
 #endif

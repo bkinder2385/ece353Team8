@@ -66,11 +66,24 @@ extern volatile bool CLEAR_CACTUS;
 //Action Determination
 extern volatile bool JUMP;
 extern volatile bool CROUCH;
-
+extern volatile bool BUTTON_PRESS;
 
 
 //pause status
 extern volatile bool PAUSED;
+
+//*****************************************************************************
+// Determines if any part of the image would be off the screen if the image
+// is moved in the specified direction. Only left and right valid for cactus 
+// and pterodactyls.
+//*****************************************************************************
+bool contact_edge(
+    volatile PS2_DIR_t direction,
+    volatile uint16_t x_coord, 
+    volatile uint16_t y_coord, 
+    uint8_t image_width
+);
+
 
 //*****************************************************************************
 // Moves the image by one pixel in the provided direction.  The second and 
@@ -123,18 +136,6 @@ void read_buttons(void);
 // Returns false otherwise.
 //*****************************************************************************
 bool game_menu(void);
-
-//*****************************************************************************
-// Determines if any part of the image would be off the screen if the image
-// is moved in the specified direction.
-//*****************************************************************************
-bool contact_edge(
-    volatile PS2_DIR_t direction,
-    volatile uint16_t x_coord, 
-    volatile uint16_t y_coord, 
-    uint8_t image_width
-);
-		
 				
 //*****************************************************************************
 // Main play of game.
