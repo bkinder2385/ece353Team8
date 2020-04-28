@@ -43,6 +43,7 @@ void init_timers(void){
 	gp_timer_config_32(TIMER2_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
   gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 380000, false, true);
   gp_timer_config_16(TIMER4_BASE, TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
+	gp_timer_config_32(TIMER5_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
 
 }
 

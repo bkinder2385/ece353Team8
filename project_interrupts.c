@@ -77,13 +77,12 @@ PS2_DIR_t ps2_get_direction(void)
 }
 
 //*****************************************************************************
-// TIMER2 ISR is used to determine when to move the PTERODACTYL and CACTUS
+// TIMER2 ISR is used to determine when to move the CACTUS
 //*****************************************************************************
 void TIMER2A_Handler(void)
 {	
 	PS2_DIR_t direction = PS2_DIR;
 	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
-	uint16_t pterLocation = proc_pterodactyl();
 	uint16_t cactusProc = generate_random_number()%3;
 	
 	if (contact) {
@@ -91,28 +90,12 @@ void TIMER2A_Handler(void)
 		CLEAR_CACTUS = true;
 		CACTUS_RUN = false;
 		ALERT_CACTUS = false;
+		//add points
 	}else if(CACTUS_RUN){
 		move_image(direction, &CACTUS_X_COORD, &CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels);
 		ALERT_CACTUS = true;
 	}
 	
-	contact = contact_edge( direction, PTERODACTYL_X_COORD,  PTERODACTYL_Y_COORD, pterodactylWidthPixels);
-	
-	if (contact) {
-		//clear pter
-		CLEAR_PTER = true;
-		P_FLY = false;
-		ALERT_PTER = false;
-	}else if (P_FLY){
-		move_image(PS2_DIR_RIGHT, &PTERODACTYL_X_COORD, &PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-		ALERT_PTER = true;
-	}
-	
-	if(!P_FLY){
-		if(pterLocation>0){
-			P_FLY = true;
-		}
-	}
 	if(!CACTUS_RUN){
 		if(cactusProc == 0){
 			CACTUS_RUN = true;
@@ -168,6 +151,34 @@ void TIMER4A_Handler(void)
 	ADC0->PSSI |= ADC_PSSI_SS2;
 	// Clear the interrupt
 	TIMER4->ICR |= TIMER_ICR_TATOCINT; 
+}
+
+//*****************************************************************************
+// TIMER5 ISR is used to determine when to move the PTERODACTYL
+//*****************************************************************************
+void TIMER5A_Handler(void){
+	uint16_t pterLocation = proc_pterodactyl();
+	
+	bool contact = contact_edge( PS2_DIR_RIGHT, PTERODACTYL_X_COORD,  PTERODACTYL_Y_COORD, pterodactylWidthPixels);
+	
+	if (contact) {
+		//clear pter
+		CLEAR_PTER = true;
+		P_FLY = false;
+		ALERT_PTER = false;
+		//add points
+	}else if (P_FLY){
+		move_image(PS2_DIR_RIGHT, &PTERODACTYL_X_COORD, &PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
+		ALERT_PTER = true;
+	}
+	
+	if(!P_FLY){
+		if(pterLocation>0){
+			P_FLY = true;
+		}
+	}
+	
+	TIMER5->ICR |= TIMER_ICR_TATOCINT;
 }
 
 //*****************************************************************************

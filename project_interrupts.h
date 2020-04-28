@@ -39,6 +39,9 @@ extern volatile uint16_t PS2_Y_DATA;
 //extern volatile PS2_DIR_t PS2_DIR;
 extern volatile bool BUTTON_PRESS;
 
+extern volatile bool P_FLY;
+extern volatile bool CACTUS_RUN;
+
 //*****************************************************************************
 // Returns the most current direction that was pressed.
 //*****************************************************************************

@@ -82,7 +82,6 @@ bool contact_edge(
     uint8_t image_width
 )
 {
-	bool hit;
 	switch(direction) {
 		case PS2_DIR_RIGHT:
 		{
@@ -93,17 +92,7 @@ bool contact_edge(
 		default:{
 		}
 	}
-	if(CROUCH){
-		
-		hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-	}else{
-		hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-	}
-	return hit;
+	return false;
 }
 
 //*****************************************************************************
@@ -477,8 +466,10 @@ main(void)
 						game_over = true;
 						continue;
 					}
+					CLEAR_CACTUS = true;
 				}
-			}else if(CLEAR_CACTUS){ //Clears cactus
+			}
+			if(CLEAR_CACTUS){ //Clears cactus
 				lcd_draw_image(
                           CACTUS_X_COORD,                       // X Center Point
                           cactusWidthPixels,   // Image Horizontal Width
@@ -491,6 +482,7 @@ main(void)
 				CACTUS_X_COORD = 219;
 				CACTUS_Y_COORD = 207;
 				CLEAR_CACTUS = false;
+				CACTUS_RUN = false;
 			}
 			
 			//PTERODACTYL
@@ -531,8 +523,10 @@ main(void)
 						game_over = true;
 						continue;
 					}
+					CLEAR_PTER = true;
 				}
-			}else if(CLEAR_PTER){ //Clears cactus
+			}
+			if(CLEAR_PTER){ //Clears cactus
 				lcd_draw_image(
                           PTERODACTYL_X_COORD,                       // X Center Point
                           pterodactylWidthPixels,   // Image Horizontal Width
@@ -544,6 +538,7 @@ main(void)
                         );
 				PTERODACTYL_X_COORD = 215;
 				CLEAR_PTER = false;
+				P_FLY = false;
 			}
 			
 			//TREX
@@ -571,31 +566,6 @@ main(void)
                           LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
-				}
-				
-				//check if hit
-				if(CROUCH){
-					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-				}else {
-					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-				}
-			
-				if(hit){
-					//decrease led (health bar)
-					health_bar--;
-					//decrease leds
-					update_health_bar(health_bar);
-				
-					//check if game over (all leds off)
-					if(health_bar == 0){
-						//show game over
-						game_over = true;
-						continue;
-					}
 				}
 			}
 		};
