@@ -31,6 +31,11 @@ extern const uint8_t cactusBitmaps[];
 extern const uint8_t cactusWidthPixels;
 extern const uint8_t cactusHeightPixels;
 
+// Bitmap info for grasstuftsmol
+extern const uint8_t grasstuftsmolBitmaps[];
+extern const uint8_t grasstuftsmolWidthPixels;
+extern const uint8_t grasstuftsmolHeightPixels;
+
 /* Bitmap info for start_btn */
 extern const uint8_t start_btnBitmaps[];
 extern const uint8_t start_btnWidthPixels;

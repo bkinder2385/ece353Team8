@@ -59,6 +59,8 @@ extern volatile bool ALERT_PTER;
 extern volatile bool CLEAR_PTER;
 extern volatile bool ALERT_CACTUS;
 extern volatile bool CLEAR_CACTUS;
+extern volatile bool ALERT_GRASS;
+extern volatile bool CLEAR_GRASS;
 
 
 //Action Determination

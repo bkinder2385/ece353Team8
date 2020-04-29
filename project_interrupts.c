@@ -36,7 +36,7 @@ volatile bool CACTUS_RUN = false;
 
 //RANDOM PTER Y LOCATIONS
 static const uint16_t  START_STATE = 0xACE7u;
-static const uint16_t  YLOCATION[] = {167, 0, 0, 100, 0, 140, 120, 0};
+static const uint16_t  YLOCATION[] = {167, 0, 167, 100, 0, 140, 120, 0};
 
 //*****************************************************************************
 // Generates a random number
@@ -111,6 +111,7 @@ void TIMER2A_Handler(void)
 	
 	if((direction == PS2_DIR_LEFT) | (direction == PS2_DIR_RIGHT)){
 		ALERT_CACTUS = true;
+		ALERT_GRASS = true;
 	}
 	// Clear the interrupt
 	TIMER2->ICR |= TIMER_ICR_TATOCINT;

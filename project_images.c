@@ -256,6 +256,34 @@ const uint8_t cactusBitmaps [] =
 const uint8_t cactusWidthPixels = 40;
 const uint8_t cactusHeightPixels = 45;
 
+// 
+//  Image data for grasstuftsmol
+// 
+
+const uint8_t grasstuftsmolBitmaps[] =
+{
+	0x00, 0x00, 0x00, 0x00, //                               
+	0x00, 0x00, 0x00, 0x00, //                               
+	0x00, 0x00, 0x04, 0x00, //                      #        
+	0x01, 0x00, 0x08, 0x00, //        #            #         
+	0x01, 0x82, 0x10, 0x00, //        ##     #    #          
+	0x00, 0x82, 0x30, 0x00, //         #     #   ##          
+	0x10, 0xC6, 0x60, 0x00, //    #    ##   ##  ##           
+	0x0C, 0xE4, 0xE3, 0x00, //     ##  ###  #  ###   ##      
+	0x06, 0x6C, 0xE6, 0x00, //      ##  ## ##  ###  ##       
+	0x03, 0x6D, 0xCC, 0x40, //       ## ## ## ###  ##   #    
+	0x3B, 0x6F, 0xD9, 0x80, //   ### ## ## ###### ##  ##     
+	0x0D, 0xFF, 0xBB, 0xA0, //     ## ########## ### ### #   
+	0x07, 0xBF, 0xB7, 0xC0, //      #### ####### ## #####    
+	0x00, 0x00, 0x00, 0x00, //                               
+	0x00, 0x00, 0x00, 0x00, //                               
+};
+
+// Bitmap sizes for grasstuftsmol
+const uint8_t grasstuftsmolWidthPixels = 30;
+const uint8_t grasstuftsmolHeightPixels = 15;
+
+
 /* 
 **  Image data for start_btn
 */

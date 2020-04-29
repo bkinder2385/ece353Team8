@@ -35,6 +35,9 @@ volatile uint16_t TREX_X_COORD = 34;
 volatile uint16_t TREX_Y_COORD = 204;
 volatile uint16_t CACTUS_X_COORD = 219;
 volatile uint16_t CACTUS_Y_COORD = 207;
+volatile uint16_t GRASS_X_COORD = 220;
+volatile uint16_t GRASS_Y_COORD = 250;
+
 
 //alerts for image rendering
 volatile bool ALERT_TREX = true;
@@ -42,6 +45,8 @@ volatile bool ALERT_PTER = false;
 volatile bool CLEAR_PTER = false;
 volatile bool ALERT_CACTUS = false;
 volatile bool CLEAR_CACTUS = false;
+volatile bool ALERT_GRASS = false;
+volatile bool CLEAR_GRASS = false;
 
 //Action Determination
 volatile bool BUTTON_PRESS = false;
@@ -282,6 +287,39 @@ void alert_cactus(){
 			
 	
 	
+}
+
+//*****************************************************************************
+// Called when ALERT_GRASS is true
+//*****************************************************************************
+void alert_grass(){
+	PS2_DIR_t direction  = PS2_DIR;
+	bool contact = contact_edge( direction, GRASS_X_COORD,  GRASS_Y_COORD, grasstuftsmolWidthPixels);
+  
+
+	if (contact) {
+		if(	direction == PS2_DIR_RIGHT){
+			//clear grass
+			CLEAR_GRASS = true;
+			return;
+		}
+		if(direction == PS2_DIR_LEFT){
+			return;
+		}
+	}
+		
+	//DRAW grass
+	move_image(direction, &GRASS_X_COORD, &GRASS_Y_COORD, grasstuftsmolHeightPixels, grasstuftsmolWidthPixels);
+	lcd_draw_image(
+                 GRASS_X_COORD,                       // X Center Point
+                 grasstuftsmolWidthPixels,   // Image Horizontal Width
+                 GRASS_Y_COORD,                       // Y Center Point
+                 grasstuftsmolHeightPixels,  // Image Vertical Height
+                 grasstuftsmolBitmaps,       // Image
+                 LCD_COLOR_GREEN2,           // Foreground Color
+                 LCD_COLOR_BROWN          // Background Color
+                );
+
 }
 
 //*****************************************************************************
@@ -564,7 +602,30 @@ main(void)
 				read_buttons();
 				BUTTON_PRESS = false;
 			}
-			
+
+//////GRASS ENVIRONMENT
+			if(ALERT_GRASS){
+				ALERT_GRASS = false;
+				alert_grass();
+			}
+			if(CLEAR_GRASS){ //Clears grass
+				lcd_draw_image(
+												GRASS_X_COORD,                       // X Center Point
+												grasstuftsmolWidthPixels,   // Image Horizontal Width
+												GRASS_Y_COORD,                       // Y Center Point
+												grasstuftsmolHeightPixels,  // Image Vertical Height
+												grasstuftsmolBitmaps,       // Image
+												LCD_COLOR_BROWN,           // Foreground Color
+												LCD_COLOR_BROWN          // Background Color
+											);
+				GRASS_X_COORD = 220;
+				if(GRASS_Y_COORD == 250){
+					GRASS_Y_COORD = 290;
+				}else{
+					GRASS_Y_COORD = 250;
+				}
+				CLEAR_GRASS = false;
+			}
 //////CACTUS
 			if(ALERT_CACTUS){
 				ALERT_CACTUS = false;
