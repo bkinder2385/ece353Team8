@@ -36,11 +36,15 @@
 
 extern volatile uint16_t PS2_X_DATA;
 extern volatile uint16_t PS2_Y_DATA;
-//extern volatile PS2_DIR_t PS2_DIR;
+extern volatile PS2_DIR_t PS2_DIR;
 extern volatile bool BUTTON_PRESS;
+extern volatile uint16_t jump_count;
 
 extern volatile bool P_FLY;
 extern volatile bool CACTUS_RUN;
+
+
+uint16_t proc_pterodactyl(uint16_t appear);
 
 //*****************************************************************************
 // TIMER2 ISR is used to determine when to move the TREX and CACTUS

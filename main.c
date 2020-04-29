@@ -23,6 +23,8 @@
 #include "main.h"
 #include "io_expander.h"
 #include "project_images.h"
+#include "project_interrupts.h"
+#include "project_hardware_init.h"
 
 #define CROUCH_COMP 6
 
@@ -47,6 +49,7 @@ volatile bool JUMP = false;
 volatile bool CROUCH = false;
 int PRESSED_EVEN;
 int DEBOUNCE_INCREMENT;
+volatile uint16_t APPEAR_PTER;
 
 //pause status
 volatile bool PAUSED = false;
@@ -170,11 +173,12 @@ bool check_if_hit(
 						(( (cactus_x_coord - (cactus_width/2)) < (trex_x_coord + (trex_width/2))) & 
 						( (cactus_x_coord - (cactus_width/2)) > (trex_x_coord - (trex_width/2))))){
 							
-							if( (((cactus_y_coord + (cactus_height/2)) < (trex_x_coord + (trex_width/2) )) &
-						( (cactus_y_coord + (cactus_height/2)) > (trex_x_coord - (trex_width/2))) ) |
-							(((cactus_y_coord - (cactus_height/2)) < (trex_y_coord + (trex_height/2))) & 
-						( (cactus_y_coord - (cactus_height/2)) > (trex_y_coord - (trex_height/2))))){
+							if( (((cactus_y_coord + (cactus_height/2)) <= (trex_y_coord + (trex_height/2) )) &
+						( (cactus_y_coord + (cactus_height/2)) >= (trex_y_coord - (trex_height/2))) ) |
+							(((cactus_y_coord - (cactus_height/2)) <= (trex_y_coord + (trex_height/2))) & 
+						( (cactus_y_coord - (cactus_height/2)) >= (trex_y_coord - (trex_height/2))))){
 							
+								CLEAR_CACTUS = true;
 							  overlap = true;
 								return overlap;
 							}
@@ -190,12 +194,131 @@ bool check_if_hit(
 						(( (pterodactyl_x_coord - (pterodactyl_width/2)) < (trex_x_coord + (trex_width/2))) & 
 						( (pterodactyl_x_coord - (pterodactyl_width/2)) > (trex_x_coord - (trex_width/2))))){
 							
+							CLEAR_PTER = true;
 							overlap = true;
 							return overlap;
 				}
 	}
 	return overlap;
   
+}
+
+//*****************************************************************************
+// Called when ALERT_TREX is true
+//*****************************************************************************
+bool alert_trex(const uint8_t *bitmaps, uint8_t width, uint8_t height){
+	bool value;
+	
+	//jump
+	if(jump_count > 0){
+		JUMP = false;
+		if(jump_count > 100){
+			if(CROUCH){
+				move_image(PS2_DIR_UP, &TREX_X_COORD, &TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels);
+			}else {
+				move_image(PS2_DIR_UP, &TREX_X_COORD, &TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels);
+			}
+		}else {
+			if(CROUCH){
+				move_image(PS2_DIR_DOWN, &TREX_X_COORD, &TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels);
+			}else {
+				move_image(PS2_DIR_DOWN, &TREX_X_COORD, &TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels);
+			}
+		}
+		jump_count--;
+	}
+	
+	//Draw image
+	lcd_draw_image(
+                  TREX_X_COORD,                       // X Center Point
+                  width,   // Image Horizontal Width
+                  TREX_Y_COORD,                       // Y Center Point
+                  height,  // Image Vertical Height
+                  bitmaps,       // Image
+                  LCD_COLOR_ORANGE,           // Foreground Color
+                  LCD_COLOR_BLACK          // Background Color
+                 );
+	
+	//check if hit
+	value = check_if_hit(TREX_X_COORD, TREX_Y_COORD, height, width,
+											 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
+											 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);			
+	return value;
+}
+
+//*****************************************************************************
+// Called when ALERT_CACTUS is true
+//*****************************************************************************
+void alert_cactus(){
+	PS2_DIR_t direction  = PS2_DIR;
+	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
+  
+
+	if (contact) {
+		if(	direction == PS2_DIR_RIGHT){
+			//clear cactus
+			CLEAR_CACTUS = true;
+			CACTUS_RUN = false;
+			//add points
+			return;
+		}
+		if(direction == PS2_DIR_LEFT){
+			return;
+		}
+	}
+		
+	//DRAW CACTUS
+	move_image(direction, &CACTUS_X_COORD, &CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels);
+	lcd_draw_image(
+                 CACTUS_X_COORD,                       // X Center Point
+                 cactusWidthPixels,   // Image Horizontal Width
+                 CACTUS_Y_COORD,                       // Y Center Point
+                 cactusHeightPixels,  // Image Vertical Height
+                 cactusBitmaps,       // Image
+                 LCD_COLOR_GREEN,           // Foreground Color
+                 LCD_COLOR_BLACK          // Background Color
+                );
+				
+			
+	
+	
+}
+
+//*****************************************************************************
+// Called when ALERT_PTER is true
+//*****************************************************************************
+void alert_pter(){
+	bool contact = contact_edge( PS2_DIR_RIGHT, PTERODACTYL_X_COORD,  PTERODACTYL_Y_COORD, pterodactylWidthPixels);
+	uint16_t pterLocation;
+	if (contact) {
+		//clear pter
+		CLEAR_PTER = true;
+		P_FLY = false;
+		//add points
+		}
+	//DRAW PTERODACTYL
+	if (P_FLY){
+		move_image(PS2_DIR_RIGHT, &PTERODACTYL_X_COORD, &PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
+	
+		lcd_draw_image(
+                   PTERODACTYL_X_COORD,                       // X Center Point
+                   pterodactylWidthPixels,   // Image Horizontal Width
+                   PTERODACTYL_Y_COORD,                       // Y Center Point
+                   pterodactylHeightPixels,  // Image Vertical Height
+                   pterodactylBitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(!P_FLY){
+		APPEAR_PTER = rand()%200;	
+		pterLocation = proc_pterodactyl(APPEAR_PTER);
+		if(pterLocation>0){
+			P_FLY = true;
+			PTERODACTYL_Y_COORD = pterLocation;
+		}
+	}
+				
 }
 
 //*****************************************************************************
@@ -378,6 +501,7 @@ main(void)
 		bool game_over = false;
 	  bool hit = false;
 		int health_bar = 8;
+		uint16_t cactusProc;
 		
 		//init_screen();
 		init_hardware();	
@@ -415,12 +539,12 @@ main(void)
 		update_health_bar(health_bar);
 		init_timers();
 		
-		//play game
+////////play game////////
     while(!game_over){
 			
 			hit = false;
 			
-			//SPACEBAR/PAUSE FUNCTIONALITY: needs to be done
+//////SPACEBAR/PAUSE FUNCTIONALITY: needs to be done
 		  
 			if(fgetc(stdin) == ' '){
 				if(PAUSED){
@@ -435,109 +559,47 @@ main(void)
  				continue;
 			}	
 			
-			//if a button was pressed, determine status
+//////if a button was pressed, determine status
 			if(BUTTON_PRESS) {
 				read_buttons();
 				BUTTON_PRESS = false;
 			}
 			
-			//CACTUS
+//////CACTUS
 			if(ALERT_CACTUS){
 				ALERT_CACTUS = false;
-				
-				//DRAW CACTUS
-				lcd_draw_image(
-                          CACTUS_X_COORD,                       // X Center Point
-                          cactusWidthPixels,   // Image Horizontal Width
-                          CACTUS_Y_COORD,                       // Y Center Point
-                          cactusHeightPixels,  // Image Vertical Height
-                          cactusBitmaps,       // Image
-                          LCD_COLOR_GREEN,           // Foreground Color
-                          LCD_COLOR_BLACK          // Background Color
-                        );
-				
-				//check if hit
-				if(CROUCH){
-					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-				}else {
-					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-				}
-			
-				if(hit){
-					//decrease led (health bar)
-					health_bar--;
-					//decrease leds
-					update_health_bar(health_bar);
-				
-					//check if game over (all leds off)
-					if(health_bar == 0){
-						//show game over
-						game_over = true;
-						continue;
-					}
-					CLEAR_CACTUS = true;
-				}
+				if(CACTUS_RUN){
+					alert_cactus();
+				}					
 			}
+			
 			if(CLEAR_CACTUS){ //Clears cactus
 				lcd_draw_image(
-                          CACTUS_X_COORD,                       // X Center Point
-                          cactusWidthPixels,   // Image Horizontal Width
-                          CACTUS_Y_COORD,                       // Y Center Point
-                          cactusHeightPixels,  // Image Vertical Height
-                          cactusBitmaps,       // Image
-                          LCD_COLOR_BLACK,           // Foreground Color
-                          LCD_COLOR_BLACK          // Background Color
-                        );
+												CACTUS_X_COORD,                       // X Center Point
+												cactusWidthPixels,   // Image Horizontal Width
+												CACTUS_Y_COORD,                       // Y Center Point
+												cactusHeightPixels,  // Image Vertical Height
+												cactusBitmaps,       // Image
+												LCD_COLOR_BLACK,           // Foreground Color
+												LCD_COLOR_BLACK          // Background Color
+											);
 				CACTUS_X_COORD = 219;
 				CACTUS_Y_COORD = 207;
 				CLEAR_CACTUS = false;
 				CACTUS_RUN = false;
 			}
 			
-			//PTERODACTYL
+			if((PS2_DIR == PS2_DIR_RIGHT) & (!CACTUS_RUN)){
+				cactusProc = rand()%300000;
+				if(cactusProc == 0){
+					CACTUS_RUN = true;
+				}
+			}
+			
+//////PTERODACTYL
 			if(ALERT_PTER){
 				ALERT_PTER = false;
-				
-				//DRAW PTERODACTYL
-				lcd_draw_image(
-                          PTERODACTYL_X_COORD,                       // X Center Point
-                          pterodactylWidthPixels,   // Image Horizontal Width
-                          PTERODACTYL_Y_COORD,                       // Y Center Point
-                          pterodactylHeightPixels,  // Image Vertical Height
-                          pterodactylBitmaps,       // Image
-                          LCD_COLOR_RED,           // Foreground Color
-                          LCD_COLOR_BLACK          // Background Color
-                        );
-				
-				//check if hit
-				if(CROUCH){
-					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-				}else {
-					hit = check_if_hit(TREX_X_COORD, TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels,
-														 CACTUS_X_COORD, CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels,
-														 PTERODACTYL_X_COORD, PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-				}
-			
-				if(hit){
-					//decrease led (health bar)
-					health_bar--;
-					//decrease leds
-					update_health_bar(health_bar);
-				
-					//check if game over (all leds off)
-					if(health_bar == 0){
-						//show game over
-						game_over = true;
-						continue;
-					}
-					CLEAR_PTER = true;
-				}
+				alert_pter();
 			}
 			if(CLEAR_PTER){ //Clears cactus
 				lcd_draw_image(
@@ -554,36 +616,32 @@ main(void)
 				P_FLY = false;
 			}
 			
-			//TREX
+//////TREX
 			if(ALERT_TREX){
 				ALERT_TREX = false;
-				
 				if(CROUCH){
-					//Draw crouched trex
-					lcd_draw_image(
-                          TREX_X_COORD,                       // X Center Point
-                          trexcrouchingWidthPixels,   // Image Horizontal Width
-                          TREX_Y_COORD,                       // Y Center Point
-                          trexcrouchingHeightPixels,  // Image Vertical Height
-                          trexcrouchingBitmaps,       // Image
-                          LCD_COLOR_ORANGE,           // Foreground Color
-                          LCD_COLOR_BLACK          // Background Color
-                        );
-				}else {
-					lcd_draw_image(
-                          TREX_X_COORD,                       // X Center Point
-                          trexstandingWidthPixels,   // Image Horizontal Width
-                          TREX_Y_COORD,                       // Y Center Point
-                          trexstandingHeightPixels,  // Image Vertical Height
-                          trexstandingBitmaps,       // Image
-                          LCD_COLOR_ORANGE,           // Foreground Color
-                          LCD_COLOR_BLACK          // Background Color
-                        );
+					hit = alert_trex(trexcrouchingBitmaps, trexcrouchingWidthPixels, trexcrouchingHeightPixels);
+				}else{
+					hit = alert_trex(trexstandingBitmaps, trexstandingWidthPixels, trexstandingHeightPixels);
+				}
+				if(hit){
+					//decrease led (health bar)
+					health_bar--;
+					//decrease leds
+					update_health_bar(health_bar);
+				
+					//check if game over (all leds off)
+					if(health_bar == 0){
+						//show game over
+						game_over = true;
+						continue;
+					}
 				}
 			}
+			
 		};
 		
-		//GAME OVER SCREEN
+////////GAME OVER SCREEN//////
 		lcd_clear_screen(LCD_COLOR_BLACK);
 		lcd_draw_image(
                           120,                       // X Center Point

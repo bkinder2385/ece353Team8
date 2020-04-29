@@ -22,14 +22,11 @@
 .\obj\project_hardware_init.o: ..\peripherals\include\ps2.h
 .\obj\project_hardware_init.o: ..\drivers\include\adc.h
 .\obj\project_hardware_init.o: ..\peripherals\include\launchpad_io.h
-.\obj\project_hardware_init.o: project_interrupts.h
-.\obj\project_hardware_init.o: project_images.h
-.\obj\project_hardware_init.o: main.h
-.\obj\project_hardware_init.o: project_hardware_init.h
+.\obj\project_hardware_init.o: io_expander.h
+.\obj\project_hardware_init.o: ..\drivers\include\i2c.h
 .\obj\project_hardware_init.o: ..\peripherals\include\serial_debug.h
 .\obj\project_hardware_init.o: ..\drivers\include\pc_buffer.h
 .\obj\project_hardware_init.o: ..\drivers\include\uart.h
 .\obj\project_hardware_init.o: ..\peripherals\include\ft6x06.h
-.\obj\project_hardware_init.o: ..\drivers\include\i2c.h
-.\obj\project_hardware_init.o: io_expander.h
+.\obj\project_hardware_init.o: project_hardware_init.h
 .\obj\project_hardware_init.o: ..\peripherals\include\eeprom.h

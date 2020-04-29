@@ -36,7 +36,7 @@ volatile bool CACTUS_RUN = false;
 
 //RANDOM PTER Y LOCATIONS
 static const uint16_t  START_STATE = 0xACE7u;
-static const uint16_t  YLOCATION[] = {165, 0, 0, 0, 0, 150, 155, 0};
+static const uint16_t  YLOCATION[] = {167, 0, 0, 100, 0, 140, 120, 0};
 
 //*****************************************************************************
 // Generates a random number
@@ -55,8 +55,11 @@ uint16_t generate_random_number(
 //*****************************************************************************
 // Returns whether a pterodactyl will appear
 //*****************************************************************************
-uint16_t proc_pterodactyl(){
-	return YLOCATION[rand()%8];
+uint16_t proc_pterodactyl(uint16_t appear){
+	if(appear == 0){
+		return YLOCATION[generate_random_number()%8];
+	}
+	return 0;
 }
 
 //*****************************************************************************
@@ -99,8 +102,6 @@ void TIMER1A_Handler(void)
 void TIMER2A_Handler(void)
 {	
 	PS2_DIR_t direction = PS2_DIR;
-	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
-	uint16_t cactusProc = rand()%3;
 	
 	if(PAUSED){
 		// Clear the interrupt and return
@@ -108,66 +109,41 @@ void TIMER2A_Handler(void)
 		return;
 	}
 	
-	if (contact) {
-		if(direction == PS2_DIR_RIGHT){
-			//clear cactus
-			CLEAR_CACTUS = true;
-			CACTUS_RUN = false;
-			ALERT_CACTUS = false;
-			//add points
-		}
-	}else if(CACTUS_RUN){
-		if((direction == PS2_DIR_LEFT) | (direction == PS2_DIR_RIGHT)){
-			move_image(direction, &CACTUS_X_COORD, &CACTUS_Y_COORD, cactusHeightPixels, cactusWidthPixels);
-			ALERT_CACTUS = true;
-		}
+	if((direction == PS2_DIR_LEFT) | (direction == PS2_DIR_RIGHT)){
+		ALERT_CACTUS = true;
 	}
-	
-	if(!CACTUS_RUN){
-		if(cactusProc == 0){
-			CACTUS_RUN = true;
-		}
-	}
-	
-  // Clear the interrupt
+	// Clear the interrupt
 	TIMER2->ICR |= TIMER_ICR_TATOCINT;
 }
 
+//*****************************************************************************
 //This controls when and how the Trex jumps
+//*****************************************************************************
 void TIMER3A_Handler(void){
 	if(PAUSED){
 		TIMER3->ICR |= TIMER_ICR_TATOCINT;
 		return;
 	}
-	if(jump_count > 0){
-		JUMP = false;
-		if(jump_count > 100){
-			if(CROUCH){
-				move_image(PS2_DIR_UP, &TREX_X_COORD, &TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels);
-			}else {
-				move_image(PS2_DIR_UP, &TREX_X_COORD, &TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels);
-			}
-		}else {
-			if(CROUCH){
-				move_image(PS2_DIR_DOWN, &TREX_X_COORD, &TREX_Y_COORD, trexcrouchingHeightPixels, trexcrouchingWidthPixels);
-			}else {
-				move_image(PS2_DIR_DOWN, &TREX_X_COORD, &TREX_Y_COORD, trexstandingHeightPixels, trexstandingWidthPixels);
-			}
-		}
-		jump_count--;
-	}
+	
 	if(JUMP){
-		jump_count = 200;
+		if(jump_count==0){
+			jump_count = 200;
+		}
 		JUMP = false;
 	}
 	ALERT_TREX = true;
 	TIMER3->ICR |= TIMER_ICR_TATOCINT;
 }
 
+//*****************************************************************************
 // is called when a push button interrupts. Sets button boolean.
+//*****************************************************************************
 void GPIOF_Handler(void)
 {
-	
+	if(PAUSED){
+		GPIOF->ICR |= 0x01;
+		return;
+	}
 	if (!BUTTON_PRESS) {
 		BUTTON_PRESS = true;
 	}
@@ -191,35 +167,18 @@ void TIMER4A_Handler(void)
 //*****************************************************************************
 // TIMER5 ISR is used to determine when to move the PTERODACTYL
 //*****************************************************************************
-//void TIMER5A_Handler(void){
+void TIMER5A_Handler(void){
 
-//	uint16_t pterLocation = proc_pterodactyl();
-//	
-//	if(PAUSED){
-//		TIMER5->ICR |= TIMER_ICR_TATOCINT;
-//		return;
-//	}
-//	bool contact = contact_edge( PS2_DIR_RIGHT, PTERODACTYL_X_COORD,  PTERODACTYL_Y_COORD, pterodactylWidthPixels);
-//	
-//	if (contact) {
-//		//clear pter
-//		CLEAR_PTER = true;
-//		P_FLY = false;
-//		ALERT_PTER = false;
-//		//add points
-//	}else if (P_FLY){
-//		move_image(PS2_DIR_RIGHT, &PTERODACTYL_X_COORD, &PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-//		ALERT_PTER = true;
-//	}
 	
-//	if(!P_FLY){
-//		if(pterLocation>0){
-//			P_FLY = true;
-//		}
-//	}
+	if(PAUSED){
+		TIMER5->ICR |= TIMER_ICR_TATOCINT;
+		return;
+	}
+
+	ALERT_PTER = true;
 	
-//	TIMER5->ICR |= TIMER_ICR_TATOCINT;
-//}
+	TIMER5->ICR |= TIMER_ICR_TATOCINT;
+}
 
 //*****************************************************************************
 // ADC0 SS2 ISR

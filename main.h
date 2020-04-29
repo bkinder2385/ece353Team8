@@ -35,8 +35,6 @@
 #include "ps2.h"
 #include "launchpad_io.h"
 
-#include "project_interrupts.h"
-#include "project_hardware_init.h"
 
 typedef enum{
   PS2_DIR_UP,
