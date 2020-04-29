@@ -170,8 +170,10 @@ bool check_if_hit(
 						(( (cactus_x_coord - (cactus_width/2)) < (trex_x_coord + (trex_width/2))) & 
 						( (cactus_x_coord - (cactus_width/2)) > (trex_x_coord - (trex_width/2))))){
 							
-							if( ((cactus_y_coord - (cactus_height/2)) < (trex_y_coord + (trex_height/2))) & 
-						( (cactus_y_coord - (cactus_height/2)) > (trex_y_coord - (trex_height/2)))){
+							if( (((cactus_y_coord + (cactus_height/2)) < (trex_x_coord + (trex_width/2) )) &
+						( (cactus_y_coord + (cactus_height/2)) > (trex_x_coord - (trex_width/2))) ) |
+							(((cactus_y_coord - (cactus_height/2)) < (trex_y_coord + (trex_height/2))) & 
+						( (cactus_y_coord - (cactus_height/2)) > (trex_y_coord - (trex_height/2))))){
 							
 							  overlap = true;
 								return overlap;
@@ -419,12 +421,18 @@ main(void)
 			hit = false;
 			
 			//SPACEBAR/PAUSE FUNCTIONALITY: needs to be done
-			while(PAUSED){
-				ALERT_CACTUS = false;
-				ALERT_PTER = false;
-				ALERT_TREX = false;
+		  
+			if(fgetc(stdin) == ' '){
+				if(PAUSED){
+					PAUSED = false;
+				}else{
+					PAUSED = true;
+				}
+			}
+ 			if(PAUSED){
+				 
 				//print PAUSED in upper right corner
-				
+ 				continue;
 			}	
 			
 			//if a button was pressed, determine status

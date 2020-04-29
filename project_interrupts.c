@@ -102,6 +102,12 @@ void TIMER2A_Handler(void)
 	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
 	uint16_t cactusProc = rand()%3;
 	
+	if(PAUSED){
+		// Clear the interrupt and return
+	  TIMER2->ICR |= TIMER_ICR_TATOCINT;
+		return;
+	}
+	
 	if (contact) {
 		if(direction == PS2_DIR_RIGHT){
 			//clear cactus
@@ -129,7 +135,10 @@ void TIMER2A_Handler(void)
 
 //This controls when and how the Trex jumps
 void TIMER3A_Handler(void){
-	
+	if(PAUSED){
+		TIMER3->ICR |= TIMER_ICR_TATOCINT;
+		return;
+	}
 	if(jump_count > 0){
 		JUMP = false;
 		if(jump_count > 100){
@@ -158,6 +167,7 @@ void TIMER3A_Handler(void){
 // is called when a push button interrupts. Sets button boolean.
 void GPIOF_Handler(void)
 {
+	
 	if (!BUTTON_PRESS) {
 		BUTTON_PRESS = true;
 	}
@@ -169,6 +179,10 @@ void GPIOF_Handler(void)
 //*****************************************************************************
 void TIMER4A_Handler(void)
 {	
+	if(PAUSED){
+		TIMER4->ICR |= TIMER_ICR_TATOCINT;
+		return;
+	}
 	ADC0->PSSI |= ADC_PSSI_SS2;
 	// Clear the interrupt
 	TIMER4->ICR |= TIMER_ICR_TATOCINT; 
@@ -177,36 +191,45 @@ void TIMER4A_Handler(void)
 //*****************************************************************************
 // TIMER5 ISR is used to determine when to move the PTERODACTYL
 //*****************************************************************************
-void TIMER5A_Handler(void){
-	uint16_t pterLocation = proc_pterodactyl();
+//void TIMER5A_Handler(void){
+
+//	uint16_t pterLocation = proc_pterodactyl();
+//	
+//	if(PAUSED){
+//		TIMER5->ICR |= TIMER_ICR_TATOCINT;
+//		return;
+//	}
+//	bool contact = contact_edge( PS2_DIR_RIGHT, PTERODACTYL_X_COORD,  PTERODACTYL_Y_COORD, pterodactylWidthPixels);
+//	
+//	if (contact) {
+//		//clear pter
+//		CLEAR_PTER = true;
+//		P_FLY = false;
+//		ALERT_PTER = false;
+//		//add points
+//	}else if (P_FLY){
+//		move_image(PS2_DIR_RIGHT, &PTERODACTYL_X_COORD, &PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
+//		ALERT_PTER = true;
+//	}
 	
-	bool contact = contact_edge( PS2_DIR_RIGHT, PTERODACTYL_X_COORD,  PTERODACTYL_Y_COORD, pterodactylWidthPixels);
+//	if(!P_FLY){
+//		if(pterLocation>0){
+//			P_FLY = true;
+//		}
+//	}
 	
-	if (contact) {
-		//clear pter
-		CLEAR_PTER = true;
-		P_FLY = false;
-		ALERT_PTER = false;
-		//add points
-	}else if (P_FLY){
-		move_image(PS2_DIR_RIGHT, &PTERODACTYL_X_COORD, &PTERODACTYL_Y_COORD, pterodactylHeightPixels, pterodactylWidthPixels);
-		ALERT_PTER = true;
-	}
-	
-	if(!P_FLY){
-		if(pterLocation>0){
-			P_FLY = true;
-		}
-	}
-	
-	TIMER5->ICR |= TIMER_ICR_TATOCINT;
-}
+//	TIMER5->ICR |= TIMER_ICR_TATOCINT;
+//}
 
 //*****************************************************************************
 // ADC0 SS2 ISR
 //*****************************************************************************
 void ADC0SS2_Handler(void)
 {
+	if(PAUSED){
+		ADC0->ISC |= ADC_ISC_IN2;
+		return;
+	}
 	PS2_Y_DATA = ADC0->SSFIFO2;
 	PS2_X_DATA = ADC0->SSFIFO2;
 	PS2_DIR = ps2_get_direction();

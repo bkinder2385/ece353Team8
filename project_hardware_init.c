@@ -25,6 +25,7 @@
 #include "serial_debug.h"
 #include "ft6x06.h"
 #include "project_hardware_init.h"
+#include "eeprom.h"
 
 
 /*
@@ -43,15 +44,20 @@ void init_timers(void){
 	gp_timer_config_32(TIMER2_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
   gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 390000, false, true);
   gp_timer_config_16(TIMER4_BASE, TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
-	gp_timer_config_32(TIMER5_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
+//	gp_timer_config_32(TIMER5_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
 
 }
 
 void init_hardware(void)
 {
 	uint8_t read_val;
+	
+	DisableInterrupts();
+	
 	//Initializing launchpad
 	init_serial_debug(true, true);	
+	
+	eeprom_init();
 	
 	//joystick initialize
 	ps2_initialize();
@@ -91,4 +97,5 @@ void init_hardware(void)
 	NVIC_EnableIRQ(gpio_get_irq_num(IO_EXPANDER_IRQ_GPIO_BASE));
 
   io_expander_byte_read(I2C1_BASE, MCP23017_GPIOB_R, &read_val);
+	EnableInterrupts();
 }

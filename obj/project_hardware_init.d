@@ -32,3 +32,4 @@
 .\obj\project_hardware_init.o: ..\peripherals\include\ft6x06.h
 .\obj\project_hardware_init.o: ..\drivers\include\i2c.h
 .\obj\project_hardware_init.o: io_expander.h
+.\obj\project_hardware_init.o: ..\peripherals\include\eeprom.h
