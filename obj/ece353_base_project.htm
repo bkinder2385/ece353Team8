@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\obj\ece353_base_project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\obj\ece353_base_project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Tue Apr 28 10:49:00 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Tue Apr 28 21:58:48 2020
 <BR><P>
-<H3>Maximum Stack Usage =        184 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        152 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; read_buttons &rArr; lcd_draw_image &rArr; lcd_set_pos &rArr; lcd_write_data_u16
 <P>
@@ -78,7 +78,6 @@ Mutually Recursive functions
  <LI><a href="#[47]">I2C2_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[47]">I2C2_Handler</a><BR>
  <LI><a href="#[48]">I2C3_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[48]">I2C3_Handler</a><BR>
  <LI><a href="#[4a]">TIMER4B_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[4a]">TIMER4B_Handler</a><BR>
- <LI><a href="#[4b]">TIMER5A_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[4b]">TIMER5A_Handler</a><BR>
  <LI><a href="#[4c]">TIMER5B_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[4c]">TIMER5B_Handler</a><BR>
  <LI><a href="#[4d]">WTIMER0A_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[4d]">WTIMER0A_Handler</a><BR>
  <LI><a href="#[4e]">WTIMER0B_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[4e]">WTIMER0B_Handler</a><BR>
@@ -218,7 +217,7 @@ Function Pointers
  <LI><a href="#[2e]">TIMER3B_Handler</a> from startup_tm4c123.o(.text) referenced from startup_tm4c123.o(RESET)
  <LI><a href="#[49]">TIMER4A_Handler</a> from project_interrupts.o(.text) referenced from startup_tm4c123.o(RESET)
  <LI><a href="#[4a]">TIMER4B_Handler</a> from startup_tm4c123.o(.text) referenced from startup_tm4c123.o(RESET)
- <LI><a href="#[4b]">TIMER5A_Handler</a> from startup_tm4c123.o(.text) referenced from startup_tm4c123.o(RESET)
+ <LI><a href="#[4b]">TIMER5A_Handler</a> from project_interrupts.o(.text) referenced from startup_tm4c123.o(RESET)
  <LI><a href="#[4c]">TIMER5B_Handler</a> from startup_tm4c123.o(.text) referenced from startup_tm4c123.o(RESET)
  <LI><a href="#[f]">UART0_Handler</a> from serial_debug.o(.text) referenced from startup_tm4c123.o(RESET)
  <LI><a href="#[10]">UART1_Handler</a> from startup_tm4c123.o(.text) referenced from startup_tm4c123.o(RESET)
@@ -289,13 +288,15 @@ Global Symbols
 <P><STRONG><a name="[a1]"></a>contact_edge</STRONG> (Thumb, 68 bytes, Stack size 20 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = contact_edge
 </UL>
-<BR>[Called By]<UL><LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER2A_Handler
+<BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER5A_Handler
+<LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER2A_Handler
 </UL>
 
 <P><STRONG><a name="[a2]"></a>move_image</STRONG> (Thumb, 62 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = move_image
 </UL>
-<BR>[Called By]<UL><LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER3A_Handler
+<BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER5A_Handler
+<LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER3A_Handler
 <LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER2A_Handler
 </UL>
 
@@ -343,8 +344,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[76]"></a>main</STRONG> (Thumb, 976 bytes, Stack size 64 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = main &rArr; read_buttons &rArr; lcd_draw_image &rArr; lcd_set_pos &rArr; lcd_write_data_u16
+<P><STRONG><a name="[76]"></a>main</STRONG> (Thumb, 1032 bytes, Stack size 32 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = main &rArr; read_buttons &rArr; lcd_draw_image &rArr; lcd_set_pos &rArr; lcd_write_data_u16
 </UL>
 <BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_draw_image
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear_screen
@@ -367,7 +368,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init_hardware
 </UL>
 
-<P><STRONG><a name="[8a]"></a>init_timers</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, project_hardware_init.o(.text))
+<P><STRONG><a name="[8a]"></a>init_timers</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, project_hardware_init.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = init_timers &rArr; gp_timer_config_32 &rArr; get_clock_masks
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gp_timer_config_32
@@ -401,8 +402,12 @@ Global Symbols
 
 <P><STRONG><a name="[e8]"></a>generate_random_number</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, project_interrupts.o(.text), UNUSED)
 
-<P><STRONG><a name="[9d]"></a>proc_pterodactyl</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, project_interrupts.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rand
+<P><STRONG><a name="[9d]"></a>proc_pterodactyl</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, project_interrupts.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = proc_pterodactyl
+</UL>
+<BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rand
+</UL>
+<BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER5A_Handler
 </UL>
 
 <P><STRONG><a name="[a3]"></a>ps2_get_direction</STRONG> (Thumb, 64 bytes, Stack size 0 bytes, project_interrupts.o(.text))
@@ -437,6 +442,15 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123.o(RESET)
 </UL>
 <P><STRONG><a name="[49]"></a>TIMER4A_Handler</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, project_interrupts.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123.o(RESET)
+</UL>
+<P><STRONG><a name="[4b]"></a>TIMER5A_Handler</STRONG> (Thumb, 110 bytes, Stack size 16 bytes, project_interrupts.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = TIMER5A_Handler &rArr; move_image
+</UL>
+<BR>[Calls]<UL><LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;proc_pterodactyl
+<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;move_image
+<LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;contact_edge
+</UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123.o(RESET)
 </UL>
 <P><STRONG><a name="[1a]"></a>ADC0SS2_Handler</STRONG> (Thumb, 44 bytes, Stack size 4 bytes, project_interrupts.o(.text))
@@ -1450,13 +1464,6 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER4B_Handler
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER4B_Handler
-</UL>
-<BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123.o(RESET)
-</UL>
-<P><STRONG><a name="[4b]"></a>TIMER5A_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, startup_tm4c123.o(.text))
-<BR><BR>[Calls]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER5A_Handler
-</UL>
-<BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER5A_Handler
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123.o(RESET)
 </UL>

@@ -36,6 +36,11 @@ extern const uint8_t start_btnBitmaps[];
 extern const uint8_t start_btnWidthPixels;
 extern const uint8_t start_btnHeightPixels;
 
+// Bitmap info for gameoverpixelstyle
+extern const uint8_t gameoverBitmaps[];
+extern const uint8_t gameoverWidthPixels;
+extern const uint8_t gameoverHeightPixels;
+
 /* Bitmap info for ground */
 extern const uint8_t groundBitmaps[];
 extern const uint8_t groundWidthPixels;

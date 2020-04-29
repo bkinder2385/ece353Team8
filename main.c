@@ -576,5 +576,27 @@ main(void)
 		};
 		
 		//GAME OVER SCREEN
+		lcd_clear_screen(LCD_COLOR_BLACK);
+		lcd_draw_image(
+                          120,                       // X Center Point
+                          trexstandingWidthPixels,   // Image Horizontal Width
+                          240,                       // Y Center Point
+                          trexstandingHeightPixels,  // Image Vertical Height
+                          trexstandingBitmaps,       // Image
+                          LCD_COLOR_ORANGE,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+		lcd_draw_image(
+                          120,                       // X Center Point
+                          gameoverWidthPixels,   // Image Horizontal Width
+                          70,                       // Y Center Point
+                          gameoverHeightPixels,  // Image Vertical Height
+                          gameoverBitmaps,       // Image
+                          LCD_COLOR_RED,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+		//print score???
 		
+		//forever loop to keep the blinker going?
+		while(1){};
 }
