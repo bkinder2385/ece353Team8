@@ -59,6 +59,7 @@ volatile bool CROUCH = false;
 int PRESSED_EVEN;
 int DEBOUNCE_INCREMENT;
 volatile uint16_t APPEAR_PTER;
+//int jump_count;
 
 //pause status
 volatile bool PAUSED = false;
@@ -367,13 +368,12 @@ void alert_pter(){
 			P_FLY = true;
 			PTERODACTYL_Y_COORD = pterLocation;
 		}
-	}
+	} 
 				
 }
 
 // DRAW THE SCORE DURING GAME PLAY
-void draw_score(void) {
-	int score = SCORE;
+void draw_score(uint8_t score) {
 	
 	if((score > 9) && (score < 20)){
 		// DRAW 1
@@ -428,9 +428,9 @@ void draw_score(void) {
 	if(score == 0){
 		//DRAW 0
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _0WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _0HeightPixels,  // Image Vertical Height
                    _0Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -440,9 +440,9 @@ void draw_score(void) {
 	if(score == 1){
 		//DRAW 1
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _1WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _1HeightPixels,  // Image Vertical Height
                    _1Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -452,9 +452,9 @@ void draw_score(void) {
 	if(score == 2){
 		//DRAW 2
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _2WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _2HeightPixels,  // Image Vertical Height
                    _2Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -464,9 +464,9 @@ void draw_score(void) {
 	if(score == 3){
 		//DRAW 3
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _3WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _3HeightPixels,  // Image Vertical Height
                    _3Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -476,9 +476,9 @@ void draw_score(void) {
 	if(score == 4){
 		//DRAW 4
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _4WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _4HeightPixels,  // Image Vertical Height
                    _4Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -488,9 +488,9 @@ void draw_score(void) {
 	if(score == 5){
 		//DRAW 5
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _5WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _5HeightPixels,  // Image Vertical Height
                    _5Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -500,9 +500,9 @@ void draw_score(void) {
 	if(score == 6){
 		//DRAW 6
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _6WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _6HeightPixels,  // Image Vertical Height
                    _6Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -512,9 +512,9 @@ void draw_score(void) {
 	if(score == 7){
 		//DRAW 7
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _7WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _7HeightPixels,  // Image Vertical Height
                    _7Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -524,9 +524,9 @@ void draw_score(void) {
 	if(score == 8){
 		//DRAW 8
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _8WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _8HeightPixels,  // Image Vertical Height
                    _8Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -536,9 +536,9 @@ void draw_score(void) {
 	if(score == 9){
 		//DRAW 9
 								lcd_draw_image(
-                   SCORE1_X_COORD,                       // X Center Point
+                   SCORE0_X_COORD,                       // X Center Point
                    _9WidthPages,   // Image Horizontal Width
-                   SCORE1_Y_COORD,                       // Y Center Point
+                   SCORE0_Y_COORD,                       // Y Center Point
                    _9HeightPixels,  // Image Vertical Height
                    _9Bitmaps,       // Image
                    LCD_COLOR_RED,           // Foreground Color
@@ -674,6 +674,16 @@ bool game_menu(void){
 	uint16_t x_value;
 	uint16_t y_value;
 	//Prints game menu screen
+	lcd_draw_image(
+                          120,                       // X Center Point
+                          high_scoreWidthPages,   // Image Horizontal Width
+                          120,                       // Y Center Point
+                          high_scoreHeightPixels,  // Image Vertical Height
+                          high_scoreBitmaps,       // Image
+                          LCD_COLOR_BROWN,           // Foreground Color
+                          LCD_COLOR_BLACK          // Background Color
+                        );
+	draw_score(HIGH_SCORE);
 	lcd_draw_image(
                           120,                       // X Center Point
                           start_btnWidthPixels,   // Image Horizontal Width
@@ -847,7 +857,7 @@ main(void)
 				if(cactusProc == 0){
 					CACTUS_RUN = true;
 				}
-			}
+			} 
 			// UPDATE SCORE
 			if(CACTUS_X_COORD == 0) {
 				// when cactus reaches edge of screen, add one to the score.
@@ -862,7 +872,7 @@ main(void)
 					eeprom_byte_write(I2C1_BASE, (addr + 1), HIGH_SCORE);
 				}
 			}
-			
+			// DRAW SCORE
 			lcd_draw_image(
 												SCORE_X_COORD,                       // X Center Point
 												score1WidthPages,   // Image Horizontal Width
@@ -872,7 +882,7 @@ main(void)
 												LCD_COLOR_RED,           // Foreground Color
 												LCD_COLOR_BLACK          // Background Color
 											);
-			draw_score();
+			draw_score(SCORE);
 			
 //////PTERODACTYL
 			if(ALERT_PTER){
@@ -939,8 +949,7 @@ main(void)
                           LCD_COLOR_RED,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
-		//print score???
 		
-		//forever loop to keep the blinker going?
+		//forever loop to keep the blinker going? BLINKER SHOULD STOP WHILE GAME IS OVER
 		while(1){};
 }

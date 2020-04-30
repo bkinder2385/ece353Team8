@@ -106,5 +106,12 @@ extern const uint8_t _0Bitmaps [];
 extern const uint8_t _0WidthPages;
 extern const uint8_t _0HeightPixels;
 
+// Bitmap info for high_score
+extern const uint8_t high_scoreBitmaps[];
+extern const uint8_t high_scoreWidthPages;
+extern const uint8_t high_scoreHeightPixels;
+
+
+
 
 #endif
