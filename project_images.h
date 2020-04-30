@@ -56,4 +56,55 @@ extern const uint8_t score1Bitmaps [];
 extern const uint8_t score1WidthPages;
 extern const uint8_t score1HeightPixels;
 
+// Bitmap info for _9
+extern const uint8_t _9Bitmaps [];
+extern const uint8_t _9WidthPages;
+extern const uint8_t _9HeightPixels;
+
+// Bitmap info for _8
+extern const uint8_t _8Bitmaps [];
+extern const uint8_t _8WidthPages;
+extern const uint8_t _8HeightPixels;
+
+// Bitmap info for _7
+extern const uint8_t _7Bitmaps [];
+extern const uint8_t _7WidthPages;
+extern const uint8_t _7HeightPixels;
+
+// Bitmap info for _6
+extern const uint8_t _6Bitmaps [];
+extern const uint8_t _6WidthPages;
+extern const uint8_t _6HeightPixels;
+
+// Bitmap info for _5
+extern const uint8_t _5Bitmaps [];
+extern const uint8_t _5WidthPages;
+extern const uint8_t _5HeightPixels;
+
+// Bitmap info for _4
+extern const uint8_t _4Bitmaps [];
+extern const uint8_t _4WidthPages;
+extern const uint8_t _4HeightPixels;
+
+// Bitmap info for _3
+extern const uint8_t _3Bitmaps [];
+extern const uint8_t _3WidthPages;
+extern const uint8_t _3HeightPixels;
+
+// Bitmap info for _2
+extern const uint8_t _2Bitmaps [];
+extern const uint8_t _2WidthPages;
+extern const uint8_t _2HeightPixels;
+
+// Bitmap info for _1
+extern const uint8_t _1Bitmaps [];
+extern const uint8_t _1WidthPages;
+extern const uint8_t _1HeightPixels;
+
+// Bitmap info for _0
+extern const uint8_t _0Bitmaps [];
+extern const uint8_t _0WidthPages;
+extern const uint8_t _0HeightPixels;
+
+
 #endif
