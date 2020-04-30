@@ -39,8 +39,6 @@ volatile uint16_t CACTUS_X_COORD = 219;
 volatile uint16_t CACTUS_Y_COORD = 207;
 volatile uint16_t GRASS_X_COORD = 220;
 volatile uint16_t GRASS_Y_COORD = 250;
-volatile uint16_t SCORE_X_COORD = 175;
-volatile uint16_t SCORE_Y_COORD = 250;
 
 
 //alerts for image rendering
@@ -59,7 +57,6 @@ volatile bool CROUCH = false;
 int PRESSED_EVEN;
 int DEBOUNCE_INCREMENT;
 volatile uint16_t APPEAR_PTER;
-//int jump_count;
 
 //pause status
 volatile bool PAUSED = false;
@@ -67,6 +64,8 @@ volatile bool PAUSED = false;
 // for scoring
 uint8_t SCORE = 0;
 uint8_t HIGH_SCORE = 0;
+volatile uint16_t SCORE_X_COORD = 175;
+volatile uint16_t SCORE_Y_COORD = 250;
 volatile uint8_t SCORE1_X_COORD = 190;
 volatile uint8_t SCORE1_Y_COORD = 250;
 volatile uint8_t SCORE0_X_COORD = 185;
@@ -368,11 +367,13 @@ void alert_pter(){
 			P_FLY = true;
 			PTERODACTYL_Y_COORD = pterLocation;
 		}
-	} 
+	}
 				
 }
 
-// DRAW THE SCORE DURING GAME PLAY
+//*****************************************************************************
+// DRAW THE SCORE 
+//*****************************************************************************
 void draw_score(uint8_t score) {
 	
 	if((score > 9) && (score < 20)){
@@ -549,6 +550,7 @@ void draw_score(uint8_t score) {
 }
 
 
+
 //*****************************************************************************
 // Updates the health bar. When hit, decrease the number of leds by two.
 //*****************************************************************************
@@ -674,16 +676,17 @@ bool game_menu(void){
 	uint16_t x_value;
 	uint16_t y_value;
 	//Prints game menu screen
-	lcd_draw_image(
+		// Print the high score
+		lcd_draw_image(
                           120,                       // X Center Point
-                          high_scoreWidthPages,   // Image Horizontal Width
-                          120,                       // Y Center Point
-                          high_scoreHeightPixels,  // Image Vertical Height
-                          high_scoreBitmaps,       // Image
-                          LCD_COLOR_BROWN,           // Foreground Color
+                          _5WidthPages,   // Image Horizontal Width
+                          50,                       // Y Center Point
+                          _5HeightPixels,  // Image Vertical Height
+                          _5Bitmaps,       // Image
+                          LCD_COLOR_RED,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
-	draw_score(HIGH_SCORE);
+	//draw_score(HIGH_SCORE);
 	lcd_draw_image(
                           120,                       // X Center Point
                           start_btnWidthPixels,   // Image Horizontal Width
@@ -746,8 +749,8 @@ main(void)
 		//init_screen();
 		init_hardware();	
 	
+		
 		eeprom_byte_read(I2C1_BASE, (addr + 1), &HIGH_SCORE);
-
 		//start game
 		while(!game_start){			
 			//Checks if player starts game
@@ -857,8 +860,8 @@ main(void)
 				if(cactusProc == 0){
 					CACTUS_RUN = true;
 				}
-			} 
-			// UPDATE SCORE
+			}
+						// UPDATE SCORE
 			if(CACTUS_X_COORD == 0) {
 				// when cactus reaches edge of screen, add one to the score.
 				eeprom_byte_read(I2C1_BASE, addr, &SCORE);
@@ -883,7 +886,6 @@ main(void)
 												LCD_COLOR_BLACK          // Background Color
 											);
 			draw_score(SCORE);
-			
 //////PTERODACTYL
 			if(ALERT_PTER){
 				ALERT_PTER = false;
@@ -949,7 +951,8 @@ main(void)
                           LCD_COLOR_RED,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
+		//print score???
 		
-		//forever loop to keep the blinker going? BLINKER SHOULD STOP WHILE GAME IS OVER
+		//forever loop to keep the blinker going?
 		while(1){};
 }

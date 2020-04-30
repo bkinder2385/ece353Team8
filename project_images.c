@@ -1247,4 +1247,3 @@ const uint8_t high_scoreWidthPages = 24;
 const uint8_t high_scoreHeightPixels = 36;
 
 
-
