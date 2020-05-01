@@ -34,7 +34,7 @@
 #include "timers.h"
 #include "ps2.h"
 #include "launchpad_io.h"
-
+#include "eeprom.h"
 
 typedef enum{
   PS2_DIR_UP,
@@ -71,16 +71,6 @@ extern volatile bool BUTTON_PRESS;
 
 //pause status
 extern volatile bool PAUSED;
-
-//for scoring
-uint8_t SCORE = 0;
-uint8_t HIGH_SCORE = 0;
-volatile uint16_t SCORE_X_COORD = 175;
-volatile uint16_t SCORE_Y_COORD = 250;
-volatile uint8_t SCORE1_X_COORD = 190;
-volatile uint8_t SCORE1_Y_COORD = 250;
-volatile uint8_t SCORE0_X_COORD = 185;
-volatile uint8_t SCORE0_Y_COORD = 250;
 
 //*****************************************************************************
 // Determines if any part of the image would be off the screen if the image
@@ -130,14 +120,16 @@ bool check_if_hit(
         uint8_t pterodactyl_width
 );
 				
-// draw score on screen
-void draw_score(uint8_t score);
-				
 //*****************************************************************************
 // Updates the health bar. When hit, decrease the number of leds by two.
 //*****************************************************************************
 void update_health_bar(int health_bar);
 
+//*****************************************************************************
+// DRAW THE SCORE 
+//*****************************************************************************
+void draw_score(uint8_t score, uint8_t score0_x, uint8_t score0_y, uint8_t score1_x, uint8_t score1_y);				
+				
 //*****************************************************************************
 // Reads button presses and determines which action to take.
 //*****************************************************************************
