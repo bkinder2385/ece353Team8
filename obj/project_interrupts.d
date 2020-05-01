@@ -22,5 +22,7 @@
 .\obj\project_interrupts.o: ..\peripherals\include\ps2.h
 .\obj\project_interrupts.o: ..\drivers\include\adc.h
 .\obj\project_interrupts.o: ..\peripherals\include\launchpad_io.h
+.\obj\project_interrupts.o: ..\peripherals\include\eeprom.h
+.\obj\project_interrupts.o: ..\drivers\include\i2c.h
 .\obj\project_interrupts.o: project_interrupts.h
 .\obj\project_interrupts.o: project_images.h

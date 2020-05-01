@@ -27,6 +27,7 @@
 #include "project_hardware_init.h"
 
 #define CROUCH_COMP 6
+#define ADDR_START    256
 
 //image locations
 volatile uint16_t PTERODACTYL_X_COORD = 214;
@@ -58,6 +59,17 @@ volatile uint16_t APPEAR_PTER;
 
 //pause status
 volatile bool PAUSED = false;
+
+// for scoring
+uint16_t addr = ADDR_START;
+uint8_t SCORE = 0;
+uint8_t HIGH_SCORE = 0;
+volatile uint16_t SCORE_X_COORD = 75;
+volatile uint16_t SCORE_Y_COORD = 50;
+volatile uint8_t SCORE1_X_COORD = 175;
+volatile uint8_t SCORE1_Y_COORD = 50;
+volatile uint8_t SCORE0_X_COORD = 210;
+volatile uint8_t SCORE0_Y_COORD = 50;
 
 
 //*****************************************************************************
@@ -257,7 +269,7 @@ bool alert_trex(const uint8_t *bitmaps, uint8_t width, uint8_t height){
 void alert_cactus(){
 	PS2_DIR_t direction  = PS2_DIR;
 	bool contact = contact_edge( direction, CACTUS_X_COORD,  CACTUS_Y_COORD, cactusWidthPixels);
-  
+	int i;
 
 	if (contact) {
 		if(	direction == PS2_DIR_RIGHT){
@@ -265,6 +277,21 @@ void alert_cactus(){
 			CLEAR_CACTUS = true;
 			CACTUS_RUN = false;
 			//add points
+			// UPDATE SCORE
+				// when cactus reaches edge of screen, add one to the score.
+				//eeprom_byte_read(I2C1_BASE, addr, &SCORE);
+				SCORE = SCORE + 1;
+				//eeprom_byte_write(I2C1_BASE, addr, SCORE);
+				// put image of score on screen
+				eeprom_byte_read(I2C1_BASE, (addr), &HIGH_SCORE);	// check high score
+					
+				if (HIGH_SCORE < SCORE) {		// see if high score < current score. If so, change high score.
+					HIGH_SCORE = SCORE;
+					eeprom_byte_write(I2C1_BASE, (addr), HIGH_SCORE);
+				}
+			
+			// DRAW "SCORE: " + score
+			draw_score(SCORE);
 			return;
 		}
 		if(direction == PS2_DIR_LEFT){
@@ -358,6 +385,184 @@ void alert_pter(){
 	}
 				
 }
+
+//*****************************************************************************
+// DRAW THE SCORE 
+//*****************************************************************************
+void draw_score(uint8_t score) {
+	
+	if((score > 9) && (score < 20)){
+		// DRAW 1
+				lcd_draw_image(
+                   SCORE1_X_COORD,                       // X Center Point
+                   _1WidthPixels,   // Image Horizontal Width
+                   SCORE1_Y_COORD,                       // Y Center Point
+                   _1HeightPixels,  // Image Vertical Height
+                   _1Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+		score = score - 10;
+	}
+	if((score > 19) && (score < 30)){
+						lcd_draw_image(
+                   SCORE1_X_COORD,                       // X Center Point
+                   _2WidthPixels,   // Image Horizontal Width
+                   SCORE1_Y_COORD,                       // Y Center Point
+                   _2HeightPixels,  // Image Vertical Height
+                   _2Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+		score = score - 20;
+	}
+	if((score > 29) && (score < 40)){
+						lcd_draw_image(
+                   SCORE1_X_COORD,                       // X Center Point
+                   _3WidthPixels,   // Image Horizontal Width
+                   SCORE1_Y_COORD,                       // Y Center Point
+                   _3HeightPixels,  // Image Vertical Height
+                   _3Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+		score = score - 30;
+	}
+	if((score > 39) && (score < 50)){
+								lcd_draw_image(
+                   SCORE1_X_COORD,                       // X Center Point
+                   _4WidthPixels,   // Image Horizontal Width
+                   SCORE1_Y_COORD,                       // Y Center Point
+                   _4HeightPixels,  // Image Vertical Height
+                   _4Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+		score = score - 40;
+	}
+	
+	if(score == 0){
+		//DRAW 0
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _0WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _0HeightPixels,  // Image Vertical Height
+                   _0Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 1){
+		//DRAW 1
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _1WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _1HeightPixels,  // Image Vertical Height
+                   _1Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 2){
+		//DRAW 2
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _2WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _2HeightPixels,  // Image Vertical Height
+                   _2Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 3){
+		//DRAW 3
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _3WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _3HeightPixels,  // Image Vertical Height
+                   _3Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 4){
+		//DRAW 4
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _4WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _4HeightPixels,  // Image Vertical Height
+                   _4Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 5){
+		//DRAW 5
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _5WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _5HeightPixels,  // Image Vertical Height
+                   _5Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 6){
+		//DRAW 6
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _6WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _6HeightPixels,  // Image Vertical Height
+                   _6Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 7){
+		//DRAW 7
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _7WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _7HeightPixels,  // Image Vertical Height
+                   _7Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 8){
+		//DRAW 8
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _8WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _8HeightPixels,  // Image Vertical Height
+                   _8Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+	if(score == 9){
+		//DRAW 9
+								lcd_draw_image(
+                   SCORE0_X_COORD,                       // X Center Point
+                   _9WidthPixels,   // Image Horizontal Width
+                   SCORE0_Y_COORD,                       // Y Center Point
+                   _9HeightPixels,  // Image Vertical Height
+                   _9Bitmaps,       // Image
+                   LCD_COLOR_RED,           // Foreground Color
+                   LCD_COLOR_BLACK          // Background Color
+                  );
+	}
+}
+
 
 //*****************************************************************************
 // Updates the health bar. When hit, decrease the number of leds by two.
@@ -512,6 +717,9 @@ bool game_menu(void){
                           LCD_COLOR_RED,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
+												
+	//Prints High Score
+	//draw_score(HIGH_SCORE);
 	
 	//Checks if touch happened
 	if(ft6x06_read_td_status() > 0){
@@ -543,8 +751,8 @@ main(void)
 		
 		//init_screen();
 		init_hardware();	
-	
-		
+		//eeprom_byte_write(I2C1_BASE, (addr), HIGH_SCORE);
+		eeprom_byte_read(I2C1_BASE, (addr), &HIGH_SCORE);
 
 		//start game
 		while(!game_start){			
@@ -573,10 +781,22 @@ main(void)
                           LCD_COLOR_ORANGE,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
+		lcd_draw_image(
+												SCORE_X_COORD,                       // X Center Point
+												score1WidthPixels,   // Image Horizontal Width
+												SCORE_Y_COORD,                       // Y Center Point
+												score1HeightPixels,  // Image Vertical Height
+												score1Bitmaps,       // Image
+												LCD_COLOR_RED,           // Foreground Color
+												LCD_COLOR_BLACK          // Background Color
+											);
+			
 		
 		update_health_bar(health_bar);
 		init_timers();
 		
+		SCORE = 0;
+		draw_score(SCORE);
 ////////play game////////
     while(!game_over){
 			
@@ -707,7 +927,7 @@ main(void)
 		lcd_draw_image(
                           120,                       // X Center Point
                           trexstandingWidthPixels,   // Image Horizontal Width
-                          240,                       // Y Center Point
+                          280,                       // Y Center Point
                           trexstandingHeightPixels,  // Image Vertical Height
                           trexstandingBitmaps,       // Image
                           LCD_COLOR_ORANGE,           // Foreground Color
@@ -722,8 +942,12 @@ main(void)
                           LCD_COLOR_RED,           // Foreground Color
                           LCD_COLOR_BLACK          // Background Color
                         );
-		//print score???
-		
+		//reposition scores and print score
+		SCORE1_X_COORD = 95;
+		SCORE1_Y_COORD = 200;
+		SCORE0_X_COORD = 130;
+		SCORE0_Y_COORD = 200;
+		draw_score(HIGH_SCORE);
 		//forever loop to keep the blinker going?
 		while(1){};
 }
