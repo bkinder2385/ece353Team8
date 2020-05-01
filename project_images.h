@@ -111,5 +111,9 @@ extern const uint8_t high_scoreBitmaps[];
 extern const uint8_t high_scoreWidthPixels;
 extern const uint8_t high_scoreHeightPixels;
 
+//  Image data for paused
+extern const uint8_t pausedBitmaps[];
+extern const uint8_t pausedWidthPixels;
+extern const uint8_t pausedHeightPixels;
 
 #endif

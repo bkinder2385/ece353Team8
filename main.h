@@ -128,7 +128,7 @@ void update_health_bar(int health_bar);
 //*****************************************************************************
 // DRAW THE SCORE 
 //*****************************************************************************
-void draw_score(uint8_t score);				
+void draw_score(uint8_t score, uint8_t score0_x, uint8_t score0_y, uint8_t score1_x, uint8_t score1_y);				
 				
 //*****************************************************************************
 // Reads button presses and determines which action to take.
