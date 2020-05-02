@@ -21,6 +21,81 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "main.h"
+#include "io_expander.h"
+#include "serial_debug.h"
+#include "ft6x06.h"
+#include "project_hardware_init.h"
+#include "eeprom.h"
 
 
+/*
+  Initializes lcd screen to the beginning of the game???
+*/
+void init_screen(void)
+{
+  lcd_config_gpio();
+  lcd_config_screen();
+  lcd_clear_screen(LCD_COLOR_BLACK);
+}
 
+//initialize timers
+void init_timers(void){
+	//timer interrupts
+	gp_timer_config_32(TIMER2_BASE, TIMER_TAMR_TAMR_PERIOD, 300000, false, true);
+  gp_timer_config_32(TIMER3_BASE, TIMER_TAMR_TAMR_PERIOD, 400000, false, true);
+  gp_timer_config_16(TIMER4_BASE, TIMER_TAMR_TAMR_PERIOD, 50000, false, true);
+	gp_timer_config_32(TIMER5_BASE, TIMER_TAMR_TAMR_PERIOD, 320000, false, true);
+
+}
+
+void init_hardware(void)
+{
+	uint8_t read_val;
+	
+	DisableInterrupts();
+	
+	//Initializing launchpad
+	init_serial_debug(true, true);	
+	
+	eeprom_init();
+	
+	//joystick initialize
+	ps2_initialize();
+	
+	//Spacebar "pause" function initialization
+	uart_init(UART0_BASE, true, true);
+	
+	//Capacitive touch controller
+	ft6x06_init();
+	
+	//I2C I/O Expander
+	io_expander_init();
+	
+	//LCD screen
+	init_screen();
+	
+	// led to blink
+	lp_io_init();
+	gp_timer_config_32(TIMER1_BASE, TIMER_TAMR_TAMR_PERIOD, 25000000, false, true);
+	
+	//turn on interrupts from io expander
+	io_expander_byte_write(I2C1_BASE, 0x00, 0x00);
+	io_expander_byte_write(I2C1_BASE, MCP23017_IODIRB_R, 0xFF);	// ENABLE AS INPUTS, 
+	io_expander_byte_write(I2C1_BASE, MCP23017_INTCONB_R, 0x00); // interrupt compared to previous value
+	io_expander_byte_write(I2C1_BASE, MCP23017_GPINTENB_R, 0x0F);  // intrrupt on change
+	io_expander_byte_write(I2C1_BASE, MCP23017_GPPUB_R, 0x0F);		// pull-up resistor
+	
+	// set up push button interrupts
+	gpio_enable_port(IO_EXPANDER_IRQ_GPIO_BASE);
+	gpio_config_digital_enable(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
+	gpio_config_enable_input(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
+	gpio_config_enable_pullup(IO_EXPANDER_IRQ_GPIO_BASE, IO_EXPANDER_IRQ_PIN_NUM);
+	gpio_config_falling_edge_irq(IO_EXPANDER_IRQ_GPIO_BASE, PF0);
+	
+	// turn on interrupts in the NVIC
+	NVIC_SetPriority(gpio_get_irq_num(IO_EXPANDER_IRQ_GPIO_BASE), 1);
+	NVIC_EnableIRQ(gpio_get_irq_num(IO_EXPANDER_IRQ_GPIO_BASE));
+
+  io_expander_byte_read(I2C1_BASE, MCP23017_GPIOB_R, &read_val);
+	EnableInterrupts();
+}
